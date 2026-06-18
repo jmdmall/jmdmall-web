@@ -15,213 +15,35 @@
             </div>
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search products..." class="search-input">
-                <button class="search-btn">🔍</button>
+                <button class="search-btn" id="searchBtn">🔍</button>
             </div>
             <div class="nav-links">
                 <a href="index.html" class="nav-link active">Home</a>
-                <a href="#deals" class="nav-link">Deals</a>
+                <a href="about.html" class="nav-link">About</a>
                 <a href="contact.html" class="nav-link">Contact</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Banner -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Welcome to JMD Mall</h1>
-            <p>Discover amazing products at unbeatable prices</p>
-            <button class="cta-btn">Shop Now</button>
-        </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="categories">
-        <h2>Shop by Category</h2>
-        <div class="category-grid">
-            <div class="category-card">
-                <div class="category-icon">📱</div>
-                <h3>Electronics</h3>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">👕</div>
-                <h3>Fashion</h3>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🏠</div>
-                <h3>Home & Garden</h3>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">⚽</div>
-                <h3>Sports</h3>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">📚</div>
-                <h3>Books</h3>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🎮</div>
-                <h3>Gaming</h3>
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="filter-container">
+            <h2>All Products</h2>
+            <div class="category-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="Electronics">Electronics</button>
+                <button class="filter-btn" data-filter="Accessories">Accessories</button>
             </div>
         </div>
     </section>
 
-    <!-- Deals Section -->
-    <section class="deals" id="deals">
-        <h2>Today's Deals</h2>
-        <div class="deals-grid">
-            <div class="deal-card">
-                <div class="deal-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23f0f0f0' width='200' height='200'/%3E%3Ctext x='50%' y='50%' font-size='14' fill='%23999' text-anchor='middle' dy='.3em'%3EProduct Image%3C/text%3E%3C/svg%3E" alt="Product">
-                </div>
-                <div class="deal-info">
-                    <h3 class="product-name">Premium Wireless Headphones</h3>
-                    <div class="product-rating">
-                        <span class="stars">⭐⭐⭐⭐⭐</span>
-                        <span class="rating-count">(248 reviews)</span>
-                    </div>
-                    <div class="price-section">
-                        <span class="price">₹2,499</span>
-                        <span class="original-price">₹4,999</span>
-                        <span class="discount">-50%</span>
-                    </div>
-                    <button class="buy-btn">Buy Now</button>
-                </div>
-            </div>
-
-            <div class="deal-card">
-                <div class="deal-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23f0f0f0' width='200' height='200'/%3E%3Ctext x='50%' y='50%' font-size='14' fill='%23999' text-anchor='middle' dy='.3em'%3EProduct Image%3C/text%3E%3C/svg%3E" alt="Product">
-                </div>
-                <div class="deal-info">
-                    <h3 class="product-name">Smart Watch Pro</h3>
-                    <div class="product-rating">
-                        <span class="stars">⭐⭐⭐⭐</span>
-                        <span class="rating-count">(156 reviews)</span>
-                    </div>
-                    <div class="price-section">
-                        <span class="price">₹5,999</span>
-                        <span class="original-price">₹9,999</span>
-                        <span class="discount">-40%</span>
-                    </div>
-                    <button class="buy-btn">Buy Now</button>
-                </div>
-            </div>
-
-            <div class="deal-card">
-                <div class="deal-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23f0f0f0' width='200' height='200'/%3E%3Ctext x='50%' y='50%' font-size='14' fill='%23999' text-anchor='middle' dy='.3em'%3EProduct Image%3C/text%3E%3C/svg%3E" alt="Product">
-                </div>
-                <div class="deal-info">
-                    <h3 class="product-name">Portable Charger 30000mAh</h3>
-                    <div class="product-rating">
-                        <span class="stars">⭐⭐⭐⭐⭐</span>
-                        <span class="rating-count">(512 reviews)</span>
-                    </div>
-                    <div class="price-section">
-                        <span class="price">₹999</span>
-                        <span class="original-price">₹1,999</span>
-                        <span class="discount">-50%</span>
-                    </div>
-                    <button class="buy-btn">Buy Now</button>
-                </div>
-            </div>
-
-            <div class="deal-card">
-                <div class="deal-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23f0f0f0' width='200' height='200'/%3E%3Ctext x='50%' y='50%' font-size='14' fill='%23999' text-anchor='middle' dy='.3em'%3EProduct Image%3C/text%3E%3C/svg%3E" alt="Product">
-                </div>
-                <div class="deal-info">
-                    <h3 class="product-name">Wireless Bluetooth Speaker</h3>
-                    <div class="product-rating">
-                        <span class="stars">⭐⭐⭐⭐</span>
-                        <span class="rating-count">(389 reviews)</span>
-                    </div>
-                    <div class="price-section">
-                        <span class="price">₹1,499</span>
-                        <span class="original-price">₹2,999</span>
-                        <span class="discount">-50%</span>
-                    </div>
-                    <button class="buy-btn">Buy Now</button>
-                </div>
-            </div>
-
-            <div class="deal-card">
-                <div class="deal-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23f0f0f0' width='200' height='200'/%3E%3Ctext x='50%' y='50%' font-size='14' fill='%23999' text-anchor='middle' dy='.3em'%3EProduct Image%3C/text%3E%3C/svg%3E" alt="Product">
-                </div>
-                <div class="deal-info">
-                    <h3 class="product-name">USB-C Fast Charging Cable</h3>
-                    <div class="product-rating">
-                        <span class="stars">⭐⭐⭐⭐⭐</span>
-                        <span class="rating-count">(1024 reviews)</span>
-                    </div>
-                    <div class="price-section">
-                        <span class="price">₹199</span>
-                        <span class="original-price">₹499</span>
-                        <span class="discount">-60%</span>
-                    </div>
-                    <button class="buy-btn">Buy Now</button>
-                </div>
-            </div>
-
-            <div class="deal-card">
-                <div class="deal-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23f0f0f0' width='200' height='200'/%3E%3Ctext x='50%' y='50%' font-size='14' fill='%23999' text-anchor='middle' dy='.3em'%3EProduct Image%3C/text%3E%3C/svg%3E" alt="Product">
-                </div>
-                <div class="deal-info">
-                    <h3 class="product-name">Premium Screen Protector Pack</h3>
-                    <div class="product-rating">
-                        <span class="stars">⭐⭐⭐⭐</span>
-                        <span class="rating-count">(678 reviews)</span>
-                    </div>
-                    <div class="price-section">
-                        <span class="price">₹299</span>
-                        <span class="original-price">₹799</span>
-                        <span class="discount">-62%</span>
-                    </div>
-                    <button class="buy-btn">Buy Now</button>
-                </div>
-            </div>
-
-            <div class="deal-card">
-                <div class="deal-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23f0f0f0' width='200' height='200'/%3E%3Ctext x='50%' y='50%' font-size='14' fill='%23999' text-anchor='middle' dy='.3em'%3EProduct Image%3C/text%3E%3C/svg%3E" alt="Product">
-                </div>
-                <div class="deal-info">
-                    <h3 class="product-name">Phone Stand Holder</h3>
-                    <div class="product-rating">
-                        <span class="stars">⭐⭐⭐⭐⭐</span>
-                        <span class="rating-count">(856 reviews)</span>
-                    </div>
-                    <div class="price-section">
-                        <span class="price">₹149</span>
-                        <span class="original-price">₹499</span>
-                        <span class="discount">-70%</span>
-                    </div>
-                    <button class="buy-btn">Buy Now</button>
-                </div>
-            </div>
-
-            <div class="deal-card">
-                <div class="deal-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23f0f0f0' width='200' height='200'/%3E%3Ctext x='50%' y='50%' font-size='14' fill='%23999' text-anchor='middle' dy='.3em'%3EProduct Image%3C/text%3E%3C/svg%3E" alt="Product">
-                </div>
-                <div class="deal-info">
-                    <h3 class="product-name">Wireless Mouse RGB</h3>
-                    <div class="product-rating">
-                        <span class="stars">⭐⭐⭐⭐</span>
-                        <span class="rating-count">(445 reviews)</span>
-                    </div>
-                    <div class="price-section">
-                        <span class="price">₹599</span>
-                        <span class="original-price">₹1,299</span>
-                        <span class="discount">-54%</span>
-                    </div>
-                    <button class="buy-btn">Buy Now</button>
-                </div>
-            </div>
+    <!-- Products Grid -->
+    <main class="products-container">
+        <div class="products-grid" id="productsGrid">
+            <!-- Products loaded dynamically by JavaScript -->
+            <div class="loading">Loading products...</div>
         </div>
-    </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -235,12 +57,12 @@
                 <ul>
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="#deals">Deals</a></li>
+                    <li><a href="index.html">Products</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Connect With Us</h4>
-                <p>Order via WhatsApp: <strong>+91-XXXXXXXXXX</strong></p>
+                <p>Order via WhatsApp: <strong>+977-9705446407</strong></p>
                 <p>Email: <strong>info@jmdmall.com</strong></p>
             </div>
         </div>

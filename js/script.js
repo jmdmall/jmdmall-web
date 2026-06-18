@@ -1,184 +1,385 @@
 // ===========================
+// CONFIGURATION
+// ===========================
+
+const CONFIG = {
+    CSV_URL: 'products.csv',
+    WHATSAPP_NUMBER: '9779705446407',
+    WHATSAPP_API_URL: 'https://wa.me/'
+};
+
+// ===========================
 // GLOBAL VARIABLES
 // ===========================
 
+let allProducts = [];
+let filteredProducts = [];
 const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+const productsGrid = document.getElementById('productsGrid');
+const filterButtons = document.querySelectorAll('.filter-btn');
 const contactForm = document.getElementById('contactForm');
 const formMessage = document.getElementById('formMessage');
 
-// Sample product database for search
-const allProducts = [
-    {
-        name: 'Premium Wireless Headphones',
-        category: 'Electronics',
-        price: 2499
-    },
-    {
-        name: 'Smart Watch Pro',
-        category: 'Electronics',
-        price: 5999
-    },
-    {
-        name: 'Portable Charger 30000mAh',
-        category: 'Electronics',
-        price: 999
-    },
-    {
-        name: 'Wireless Bluetooth Speaker',
-        category: 'Electronics',
-        price: 1499
-    },
-    {
-        name: 'USB-C Fast Charging Cable',
-        category: 'Electronics',
-        price: 199
-    },
-    {
-        name: 'Premium Screen Protector Pack',
-        category: 'Electronics',
-        price: 299
-    },
-    {
-        name: 'Phone Stand Holder',
-        category: 'Accessories',
-        price: 149
-    },
-    {
-        name: 'Wireless Mouse RGB',
-        category: 'Electronics',
-        price: 599
-    }
-];
-
 // ===========================
-// SEARCH FUNCTIONALITY
+// INITIALIZATION
 // ===========================
 
-if (searchInput) {
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase().trim();
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('Page loaded, initializing...');
+    await loadProducts();
+    setupEventListeners();
+    updateActiveNavLink();
+});
+
+// ===========================
+// LOAD PRODUCTS FROM CSV
+// ===========================
+
+async function loadProducts() {
+    try {
+        const response = await fetch(CONFIG.CSV_URL);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
-        if (searchTerm.length === 0) {
-            console.log('Search cleared');
-            return;
-        }
+        const csvText = await response.text();
+        allProducts = parseCSV(csvText);
+        filteredProducts = [...allProducts];
+        
+        console.log(`Loaded ${allProducts.length} products`);
+        renderProducts(filteredProducts);
+    } catch (error) {
+        console.error('Error loading products:', error);
+        productsGrid.innerHTML = '<div class="loading">Failed to load products. Please refresh the page.</div>';
+    }
+}
 
-        // Filter products based on search term
-        const results = allProducts.filter(product => 
+// ===========================
+// PARSE CSV
+// ===========================
+
+function parseCSV(csvText) {
+    const lines = csvText.trim().split('\n');
+    if (lines.length < 2) return [];
+    
+    const headers = lines[0].split(',').map(h => h.trim());
+    const products = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+        if (lines[i].trim() === '') continue;
+        
+        const values = lines[i].split(',').map(v => v.trim());
+        const product = {};
+        
+        headers.forEach((header, index) => {
+            product[header] = values[index] || '';
+        });
+        
+        products.push(product);
+    }
+    
+    return products;
+}
+
+// ===========================
+// RENDER PRODUCTS
+// ===========================
+
+function renderProducts(products) {
+    if (!productsGrid) return;
+    
+    if (products.length === 0) {
+        productsGrid.innerHTML = '<div class="loading">No products found</div>';
+        return;
+    }
+    
+    productsGrid.innerHTML = products.map(product => createProductCard(product)).join('');
+    attachProductCardListeners();
+}
+
+// ===========================
+// CREATE PRODUCT CARD
+// ===========================
+
+function createProductCard(product) {
+    const { id, name, price, image, category } = product;
+    
+    return `
+        <div class="product-card" data-product-id="${id}">
+            <div class="product-image-wrapper">
+                <img class="product-image" src="${image}" alt="${name}" loading="lazy">
+                <span class="product-category">${category}</span>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">${escapeHTML(name)}</h3>
+                <div class="product-price">₹${formatPrice(price)}</div>
+                <div class="product-actions">
+                    <button class="action-btn buy-btn" data-product-id="${id}" data-product-name="${escapeHTML(name)}" data-product-price="${price}">
+                        Buy on WhatsApp
+                    </button>
+                    <button class="action-btn share-btn" data-product-id="${id}" data-product-name="${escapeHTML(name)}">
+                        Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// ===========================
+// ATTACH EVENT LISTENERS TO PRODUCT CARDS
+// ===========================
+
+function attachProductCardListeners() {
+    // Buy on WhatsApp buttons
+    document.querySelectorAll('.buy-btn').forEach(button => {
+        button.addEventListener('click', handleBuyClick);
+    });
+    
+    // Share buttons
+    document.querySelectorAll('.share-btn').forEach(button => {
+        button.addEventListener('click', handleShareClick);
+    });
+}
+
+// ===========================
+// HANDLE BUY CLICK
+// ===========================
+
+function handleBuyClick(event) {
+    event.preventDefault();
+    
+    const productName = event.target.getAttribute('data-product-name');
+    const productPrice = event.target.getAttribute('data-product-price');
+    
+    const message = `I want to buy ${productName} for ₹${productPrice} from JMD Mall`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `${CONFIG.WHATSAPP_API_URL}${CONFIG.WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank');
+}
+
+// ===========================
+// HANDLE SHARE CLICK
+// ===========================
+
+function handleShareClick(event) {
+    event.preventDefault();
+    
+    const productName = event.target.getAttribute('data-product-name');
+    const productId = event.target.getAttribute('data-product-id');
+    const currentUrl = window.location.origin + window.location.pathname + `?product=${productId}`;
+    
+    const shareData = {
+        title: 'JMD Mall',
+        text: `Check out ${productName} on JMD Mall`,
+        url: currentUrl
+    };
+    
+    // Use Web Share API if available
+    if (navigator.share) {
+        navigator.share(shareData)
+            .then(() => console.log('Product shared successfully'))
+            .catch(err => {
+                if (err.name !== 'AbortError') {
+                    console.error('Error sharing:', err);
+                    fallbackShare(shareData);
+                }
+            });
+    } else {
+        // Fallback: copy to clipboard
+        fallbackShare(shareData);
+    }
+}
+
+// ===========================
+// FALLBACK SHARE (COPY TO CLIPBOARD)
+// ===========================
+
+function fallbackShare(shareData) {
+    const text = `${shareData.title}\n${shareData.text}\n${shareData.url}`;
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+            .then(() => showNotification('Link copied to clipboard!'))
+            .catch(() => showNotification('Could not copy to clipboard', 'error'));
+    } else {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showNotification('Link copied to clipboard!');
+        } catch (err) {
+            showNotification('Could not copy to clipboard', 'error');
+        }
+        document.body.removeChild(textarea);
+    }
+}
+
+// ===========================
+// SHOW NOTIFICATION
+// ===========================
+
+function showNotification(message, type = 'success') {
+    // Create a temporary notification
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background-color: ${type === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1001;
+        font-weight: 500;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// ===========================
+// SETUP EVENT LISTENERS
+// ===========================
+
+function setupEventListeners() {
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', handleSearch);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleSearch();
+        });
+    }
+    
+    if (searchBtn) {
+        searchBtn.addEventListener('click', handleSearch);
+    }
+    
+    // Filter buttons
+    filterButtons.forEach(button => {
+        button.addEventListener('click', handleFilter);
+    });
+    
+    // Contact form
+    if (contactForm) {
+        contactForm.addEventListener('submit', handleFormSubmit);
+    }
+}
+
+// ===========================
+// HANDLE SEARCH
+// ===========================
+
+function handleSearch() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    
+    if (searchTerm === '') {
+        filteredProducts = [...allProducts];
+    } else {
+        filteredProducts = allProducts.filter(product => 
             product.name.toLowerCase().includes(searchTerm) ||
             product.category.toLowerCase().includes(searchTerm)
         );
-
-        if (results.length > 0) {
-            console.log('Search results:', results);
-            // In a real implementation, you would update the page to show filtered results
-            // For now, we just log the results
-        } else {
-            console.log('No products found for:', searchTerm);
-        }
-    });
-
-    // Handle search on Enter key
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            performSearch(this.value);
-        }
-    });
-}
-
-// ===========================
-// SEARCH EXECUTION
-// ===========================
-
-function performSearch(searchTerm) {
-    searchTerm = searchTerm.toLowerCase().trim();
-    const results = allProducts.filter(product =>
-        product.name.toLowerCase().includes(searchTerm) ||
-        product.category.toLowerCase().includes(searchTerm)
-    );
-
-    if (results.length > 0) {
-        console.log(`Found ${results.length} products:`, results);
-        // Navigate to products or show results on the page
-        // For now, just log
-    } else {
-        alert(`No products found matching "${searchTerm}". Try different keywords.`);
     }
+    
+    renderProducts(filteredProducts);
 }
 
 // ===========================
-// CONTACT FORM HANDLING
+// HANDLE FILTER
 // ===========================
 
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+function handleFilter(event) {
+    const filterValue = event.target.getAttribute('data-filter');
+    
+    // Update active button
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Filter products
+    if (filterValue === 'all') {
+        filteredProducts = [...allProducts];
+    } else {
+        filteredProducts = allProducts.filter(product => product.category === filterValue);
+    }
+    
+    // Clear search
+    if (searchInput) searchInput.value = '';
+    
+    renderProducts(filteredProducts);
+}
 
-        // Get form data
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const subject = document.getElementById('subject').value.trim();
-        const message = document.getElementById('message').value.trim();
+// ===========================
+// HANDLE FORM SUBMIT
+// ===========================
 
-        // Validate form
-        if (!name || !email || !phone || !subject || !message) {
-            showFormMessage('Please fill in all fields.', 'error');
-            return;
-        }
-
-        // Validate email
-        if (!isValidEmail(email)) {
-            showFormMessage('Please enter a valid email address.', 'error');
-            return;
-        }
-
-        // Validate phone
-        if (!isValidPhone(phone)) {
-            showFormMessage('Please enter a valid phone number.', 'error');
-            return;
-        }
-
-        // In a real application, you would send this data to a server
-        console.log('Form Data:', {
-            name,
-            email,
-            phone,
-            subject,
-            message,
-            timestamp: new Date().toISOString()
-        });
-
-        // Show success message
-        showFormMessage(
-            'Thank you! Your message has been received. We will get back to you soon.',
-            'success'
-        );
-
-        // Reset form
-        contactForm.reset();
-
-        // Clear message after 5 seconds
-        setTimeout(() => {
-            formMessage.style.display = 'none';
-        }, 5000);
+function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const message = document.getElementById('message').value.trim();
+    
+    // Validate
+    if (!name || !email || !phone || !subject || !message) {
+        showFormMessage('Please fill in all fields.', 'error');
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+        showFormMessage('Please enter a valid email address.', 'error');
+        return;
+    }
+    
+    if (!isValidPhone(phone)) {
+        showFormMessage('Please enter a valid phone number.', 'error');
+        return;
+    }
+    
+    // Log form data (in real app, send to server)
+    console.log('Form submitted:', {
+        name, email, phone, subject, message,
+        timestamp: new Date().toISOString()
     });
+    
+    showFormMessage('Thank you! Your message has been received. We will get back to you soon.', 'success');
+    contactForm.reset();
+    
+    setTimeout(() => {
+        formMessage.style.display = 'none';
+    }, 5000);
 }
 
 // ===========================
-// FORM HELPERS
+// SHOW FORM MESSAGE
 // ===========================
 
 function showFormMessage(message, type) {
     if (!formMessage) return;
-
+    
     formMessage.textContent = message;
     formMessage.className = `form-message ${type}`;
     formMessage.style.display = 'block';
-
-    // Scroll to message
+    
     formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+
+// ===========================
+// VALIDATION HELPERS
+// ===========================
 
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -191,95 +392,23 @@ function isValidPhone(phone) {
 }
 
 // ===========================
-// BUY NOW BUTTON HANDLERS
+// UTILITY FUNCTIONS
 // ===========================
 
-document.querySelectorAll('.buy-btn').forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        // Get product info from the card
-        const card = this.closest('.deal-card');
-        const productName = card.querySelector('.product-name').textContent;
-        const price = card.querySelector('.price').textContent;
-
-        // Create WhatsApp message
-        const whatsappNumber = '91XXXXXXXXXX'; // Replace with actual number
-        const message = encodeURIComponent(
-            `Hi, I'm interested in buying: ${productName} (${price}). Please provide more details.`
-        );
-
-        // Open WhatsApp
-        window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
-    });
-});
-
-// ===========================
-// CATEGORY CARD HANDLERS
-// ===========================
-
-document.querySelectorAll('.category-card').forEach(card => {
-    card.addEventListener('click', function() {
-        const category = this.querySelector('h3').textContent;
-        console.log('Category selected:', category);
-
-        // Show search results for category
-        performSearch(category);
-    });
-});
-
-// ===========================
-// SMOOTH SCROLL BEHAVIOR
-// ===========================
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-
-        // Skip if it's just "#"
-        if (href === '#') return;
-
-        e.preventDefault();
-
-        const target = document.querySelector(href);
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// ===========================
-// MOBILE MENU (Future Enhancement)
-// ===========================
-
-// This function is prepared for future mobile menu toggle
-function toggleMobileMenu() {
-    const navLinks = document.querySelector('.nav-links');
-    if (navLinks) {
-        navLinks.classList.toggle('active');
-    }
+function formatPrice(price) {
+    return parseInt(price).toLocaleString('en-IN');
 }
 
-// ===========================
-// PAGE INITIALIZATION
-// ===========================
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('JMD Mall website loaded successfully!');
-
-    // Set active navigation link based on current page
-    updateActiveNavLink();
-
-    // Initialize tooltips or other features if needed
-    console.log('Total products available:', allProducts.length);
-});
-
-// ===========================
-// UPDATE ACTIVE NAV LINK
-// ===========================
+function escapeHTML(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
 
 function updateActiveNavLink() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -295,72 +424,9 @@ function updateActiveNavLink() {
 }
 
 // ===========================
-// SHOPPING CART (Future Enhancement)
-// ===========================
-
-// Prepared for future shopping cart functionality
-const cart = {
-    items: [],
-
-    addItem: function(product) {
-        const existingItem = this.items.find(item => item.name === product.name);
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            this.items.push({
-                ...product,
-                quantity: 1
-            });
-        }
-        console.log('Cart updated:', this.items);
-    },
-
-    removeItem: function(productName) {
-        this.items = this.items.filter(item => item.name !== productName);
-        console.log('Cart updated:', this.items);
-    },
-
-    getTotal: function() {
-        return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-    },
-
-    clear: function() {
-        this.items = [];
-        console.log('Cart cleared');
-    }
-};
-
-// ===========================
-// UTILITY FUNCTIONS
-// ===========================
-
-/**
- * Format price to Indian Rupees format
- */
-function formatPrice(price) {
-    return '₹' + price.toLocaleString('en-IN');
-}
-
-/**
- * Get current time in HH:MM:SS format
- */
-function getCurrentTime() {
-    const now = new Date();
-    return now.toLocaleTimeString('en-IN');
-}
-
-/**
- * Log analytics event (prepared for future analytics integration)
- */
-function logEvent(eventName, eventData) {
-    console.log(`[${getCurrentTime()}] Event: ${eventName}`, eventData);
-}
-
-// ===========================
 // PERFORMANCE MONITORING
 // ===========================
 
-// Log page load performance
 window.addEventListener('load', function() {
     const perfData = window.performance.timing;
     const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
@@ -375,7 +441,6 @@ window.addEventListener('error', function(e) {
     console.error('Error occurred:', e.error);
 });
 
-// Handle unhandled promise rejections
 window.addEventListener('unhandledrejection', function(e) {
     console.error('Unhandled promise rejection:', e.reason);
 });

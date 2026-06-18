@@ -26,7 +26,7 @@ html, body {
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: var(--text-dark);
     background-color: var(--bg-light);
@@ -173,161 +173,132 @@ a:hover {
 }
 
 /* ===========================
-   HERO SECTION
+   FILTER SECTION
    =========================== */
 
-.hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: var(--bg-light);
-    padding: 4rem 1.5rem;
-    text-align: center;
-    margin-bottom: 3rem;
+.filter-section {
+    background-color: var(--bg-gray);
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.hero-content {
-    max-width: 800px;
+.filter-container {
+    max-width: 1400px;
     margin: 0 auto;
 }
 
-.hero h1 {
-    color: var(--bg-light);
-    font-size: 3rem;
-    margin-bottom: 1rem;
+.filter-container h2 {
+    margin-bottom: 1.5rem;
 }
 
-.hero p {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
+.category-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-.cta-btn {
-    display: inline-block;
+.filter-btn {
+    padding: 0.6rem 1.2rem;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
     background-color: var(--primary-color);
     color: var(--bg-light);
-    padding: 1rem 2.5rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    text-decoration: none;
-}
-
-.cta-btn:hover {
-    background-color: #ff8c3b;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
-}
-
-/* ===========================
-   CATEGORIES SECTION
-   =========================== */
-
-.categories {
-    max-width: 1400px;
-    margin: 0 auto 3rem;
-    padding: 0 1.5rem;
-}
-
-.categories h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
-}
-
-.category-card {
-    background-color: var(--bg-light);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 2rem 1rem;
-    text-align: center;
-    cursor: pointer;
-    transition: var(--transition);
-    box-shadow: var(--shadow-light);
-}
-
-.category-card:hover {
-    box-shadow: var(--shadow-medium);
     border-color: var(--primary-color);
-    transform: translateY(-4px);
-}
-
-.category-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-.category-card h3 {
-    font-size: 1rem;
-    color: var(--text-dark);
 }
 
 /* ===========================
-   DEALS SECTION
+   PRODUCTS CONTAINER
    =========================== */
 
-.deals {
+.products-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1.5rem;
-    margin-bottom: 3rem;
+    padding: 2rem 1.5rem;
 }
 
-.deals h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.deals-grid {
+.products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
 }
 
-.deal-card {
+.loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+/* ===========================
+   PRODUCT CARD
+   =========================== */
+
+.product-card {
     background-color: var(--bg-light);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     overflow: hidden;
     transition: var(--transition);
     box-shadow: var(--shadow-light);
+    display: flex;
+    flex-direction: column;
 }
 
-.deal-card:hover {
+.product-card:hover {
     box-shadow: var(--shadow-medium);
     transform: translateY(-4px);
 }
 
-.deal-image {
+.product-image-wrapper {
     width: 100%;
-    height: 200px;
+    height: 250px;
     background-color: var(--bg-gray);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
 }
 
-.deal-image img {
+.product-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: var(--transition);
+    background-color: var(--bg-gray);
 }
 
-.deal-card:hover .deal-image img {
+.product-card:hover .product-image {
     transform: scale(1.05);
 }
 
-.deal-info {
+.product-category {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--primary-color);
+    color: var(--bg-light);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.product-info {
     padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-name {
@@ -335,69 +306,50 @@ a:hover {
     font-weight: 500;
     margin-bottom: 0.8rem;
     line-height: 1.4;
+    color: var(--text-dark);
     min-height: 2.8em;
 }
 
-.product-rating {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-}
-
-.stars {
-    font-size: 1rem;
-}
-
-.rating-count {
-    color: var(--text-light);
-    font-size: 0.85rem;
-}
-
-.price-section {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
     margin-bottom: 1.2rem;
 }
 
-.price {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--primary-color);
+.product-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: auto;
 }
 
-.original-price {
-    font-size: 0.95rem;
-    color: var(--text-light);
-    text-decoration: line-through;
-}
-
-.discount {
-    background-color: #e74c3c;
-    color: var(--bg-light);
-    padding: 0.3rem 0.6rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.buy-btn {
-    width: 100%;
-    background-color: var(--primary-color);
-    color: var(--bg-light);
-    border: none;
+.action-btn {
+    flex: 1;
     padding: 0.8rem;
+    border: none;
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
 }
 
+.buy-btn {
+    background-color: var(--primary-color);
+    color: var(--bg-light);
+}
+
 .buy-btn:hover {
     background-color: #ff8c3b;
+}
+
+.share-btn {
+    background-color: var(--secondary-color);
+    color: var(--bg-light);
+}
+
+.share-btn:hover {
+    background-color: #0f4a7a;
 }
 
 /* ===========================
@@ -617,6 +569,9 @@ a:hover {
     color: var(--bg-light);
     border-radius: 8px;
     margin-bottom: 3rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cta-section h2 {
@@ -627,6 +582,26 @@ a:hover {
 .cta-section p {
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 1.5rem;
+}
+
+.cta-btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: var(--bg-light);
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.cta-btn:hover {
+    background-color: #ff8c3b;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
 }
 
 /* ===========================
@@ -714,32 +689,16 @@ a:hover {
         font-size: 0.9rem;
     }
 
-    .hero {
-        padding: 2rem 1rem;
+    .category-filters {
+        gap: 0.5rem;
     }
 
-    .hero h1 {
-        font-size: 2rem;
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
     }
 
-    .hero p {
-        font-size: 1rem;
-    }
-
-    .category-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 1rem;
-    }
-
-    .category-card {
-        padding: 1.5rem 0.8rem;
-    }
-
-    .category-icon {
-        font-size: 2.5rem;
-    }
-
-    .deals-grid {
+    .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1rem;
     }
@@ -770,6 +729,7 @@ a:hover {
 
     .nav-container {
         padding: 0.6rem 0.8rem;
+        gap: 0.8rem;
     }
 
     .nav-logo a {
@@ -783,68 +743,66 @@ a:hover {
 
     .search-btn {
         padding: 0.6rem;
+        font-size: 0.9rem;
     }
 
     .nav-links {
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.3rem;
     }
 
     .nav-link {
         font-size: 0.8rem;
     }
 
-    .hero {
+    .filter-section {
         padding: 1.5rem 1rem;
     }
 
-    .hero h1 {
-        font-size: 1.5rem;
+    .filter-container h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
     }
 
-    .cta-btn {
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
+    .category-filters {
+        gap: 0.4rem;
     }
 
-    .category-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.8rem;
-    }
-
-    .category-card {
-        padding: 1rem 0.5rem;
-    }
-
-    .category-icon {
-        font-size: 2rem;
-    }
-
-    .category-card h3 {
+    .filter-btn {
+        padding: 0.4rem 0.8rem;
         font-size: 0.85rem;
     }
 
-    .deals-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    .products-container {
+        padding: 1rem;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
     }
 
     .product-name {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
-    .price {
+    .product-price {
         font-size: 1.2rem;
     }
 
-    .buy-btn {
-        padding: 0.7rem;
-        font-size: 0.95rem;
+    .action-btn {
+        padding: 0.6rem;
+        font-size: 0.85rem;
     }
 
     .footer-container {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+    }
+
+    .cta-section {
+        margin: 2rem 1rem 3rem 1rem;
+        padding: 2rem 1rem;
     }
 }
 
@@ -860,20 +818,4 @@ a:hover {
 
 .text-center {
     text-align: center;
-}
-
-.mt-3 {
-    margin-top: 3rem;
-}
-
-.mb-3 {
-    margin-bottom: 3rem;
-}
-
-.mt-2 {
-    margin-top: 2rem;
-}
-
-.mb-2 {
-    margin-bottom: 2rem;
 }
