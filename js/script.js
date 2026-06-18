@@ -1,234 +1,248 @@
-/* =============================================
-   JMD MALL - MAIN JAVASCRIPT FILE
-   Handles interactivity and functionality
-   ============================================= */
+// ===========================
+// GLOBAL VARIABLES
+// ===========================
 
-// =============================================
-// 1. MOBILE MENU TOGGLE
-// =============================================
-
-// Get DOM elements for navigation
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-link');
-
-// Open/Close mobile menu when hamburger is clicked
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-    });
-}
-
-// Close mobile menu when a nav link is clicked
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-    });
-});
-
-// Close mobile menu when clicking outside
-document.addEventListener('click', (event) => {
-    const isClickInsideNav = event.target.closest('.nav-container');
-    if (!isClickInsideNav && navMenu.classList.contains('active')) {
-        navMenu.classList.remove('active');
-    }
-});
-
-// =============================================
-// 2. ACTIVE PAGE DETECTION
-// =============================================
-
-// Get current page filename
-function setActiveNavLink() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        
-        // Remove active class from all links
-        link.classList.remove('active');
-        
-        // Add active class to current page link
-        if (href === currentPage || (currentPage === '' && href === 'index.html')) {
-            link.classList.add('active');
-        }
-    });
-}
-
-// Set active link on page load
-document.addEventListener('DOMContentLoaded', setActiveNavLink);
-
-// =============================================
-// 3. SEARCH FUNCTIONALITY
-// =============================================
-
-const searchBtn = document.getElementById('searchBtn');
 const searchInput = document.getElementById('searchInput');
-
-// Search button click event
-if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-        performSearch();
-    });
-}
-
-// Search on Enter key press
-if (searchInput) {
-    searchInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            performSearch();
-        }
-    });
-}
-
-// Perform search function
-function performSearch() {
-    const searchTerm = searchInput.value.trim();
-    
-    if (searchTerm === '') {
-        alert('Please enter a search term');
-        return;
-    }
-    
-    // In a real application, this would redirect to a search results page
-    // or make an API call to fetch search results
-    console.log('Searching for: ' + searchTerm);
-    alert('Search functionality would be implemented here.\nYou searched for: ' + searchTerm);
-}
-
-// =============================================
-// 4. CATEGORY CARD INTERACTIONS
-// =============================================
-
-const categoryCards = document.querySelectorAll('.category-card');
-
-// Add click event to category cards
-categoryCards.forEach(card => {
-    card.addEventListener('click', function() {
-        const categoryName = this.querySelector('h3').textContent;
-        console.log('Category selected: ' + categoryName);
-        // In a real app, this would redirect to a category page
-        alert('Welcome to ' + categoryName + '!\nCategory browsing would be implemented here.');
-    });
-});
-
-// =============================================
-// 5. CONTACT FORM HANDLING
-// =============================================
-
 const contactForm = document.getElementById('contactForm');
 const formMessage = document.getElementById('formMessage');
 
-// Form submission handler
-if (contactForm) {
-    contactForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+// Sample product database for search
+const allProducts = [
+    {
+        name: 'Premium Wireless Headphones',
+        category: 'Electronics',
+        price: 2499
+    },
+    {
+        name: 'Smart Watch Pro',
+        category: 'Electronics',
+        price: 5999
+    },
+    {
+        name: 'Portable Charger 30000mAh',
+        category: 'Electronics',
+        price: 999
+    },
+    {
+        name: 'Wireless Bluetooth Speaker',
+        category: 'Electronics',
+        price: 1499
+    },
+    {
+        name: 'USB-C Fast Charging Cable',
+        category: 'Electronics',
+        price: 199
+    },
+    {
+        name: 'Premium Screen Protector Pack',
+        category: 'Electronics',
+        price: 299
+    },
+    {
+        name: 'Phone Stand Holder',
+        category: 'Accessories',
+        price: 149
+    },
+    {
+        name: 'Wireless Mouse RGB',
+        category: 'Electronics',
+        price: 599
+    }
+];
+
+// ===========================
+// SEARCH FUNCTIONALITY
+// ===========================
+
+if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase().trim();
         
-        // Get form data
-        const formData = new FormData(contactForm);
-        const name = formData.get('name').trim();
-        const email = formData.get('email').trim();
-        const phone = formData.get('phone').trim();
-        const subject = formData.get('subject').trim();
-        const message = formData.get('message').trim();
-        
-        // Validate required fields
-        if (!name || !email || !subject || !message) {
-            showFormMessage('Please fill in all required fields.', 'error');
+        if (searchTerm.length === 0) {
+            console.log('Search cleared');
             return;
         }
-        
-        // Validate email format
+
+        // Filter products based on search term
+        const results = allProducts.filter(product => 
+            product.name.toLowerCase().includes(searchTerm) ||
+            product.category.toLowerCase().includes(searchTerm)
+        );
+
+        if (results.length > 0) {
+            console.log('Search results:', results);
+            // In a real implementation, you would update the page to show filtered results
+            // For now, we just log the results
+        } else {
+            console.log('No products found for:', searchTerm);
+        }
+    });
+
+    // Handle search on Enter key
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch(this.value);
+        }
+    });
+}
+
+// ===========================
+// SEARCH EXECUTION
+// ===========================
+
+function performSearch(searchTerm) {
+    searchTerm = searchTerm.toLowerCase().trim();
+    const results = allProducts.filter(product =>
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.category.toLowerCase().includes(searchTerm)
+    );
+
+    if (results.length > 0) {
+        console.log(`Found ${results.length} products:`, results);
+        // Navigate to products or show results on the page
+        // For now, just log
+    } else {
+        alert(`No products found matching "${searchTerm}". Try different keywords.`);
+    }
+}
+
+// ===========================
+// CONTACT FORM HANDLING
+// ===========================
+
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form data
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const subject = document.getElementById('subject').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        // Validate form
+        if (!name || !email || !phone || !subject || !message) {
+            showFormMessage('Please fill in all fields.', 'error');
+            return;
+        }
+
+        // Validate email
         if (!isValidEmail(email)) {
             showFormMessage('Please enter a valid email address.', 'error');
             return;
         }
-        
-        // In a real application, this would send the data to a server
-        // For now, we'll just simulate successful submission
-        console.log({
-            name: name,
-            email: email,
-            phone: phone,
-            subject: subject,
-            message: message
+
+        // Validate phone
+        if (!isValidPhone(phone)) {
+            showFormMessage('Please enter a valid phone number.', 'error');
+            return;
+        }
+
+        // In a real application, you would send this data to a server
+        console.log('Form Data:', {
+            name,
+            email,
+            phone,
+            subject,
+            message,
+            timestamp: new Date().toISOString()
         });
-        
+
         // Show success message
-        showFormMessage('Thank you for your message! We will get back to you soon.', 'success');
-        
-        // Reset form after 2 seconds
+        showFormMessage(
+            'Thank you! Your message has been received. We will get back to you soon.',
+            'success'
+        );
+
+        // Reset form
+        contactForm.reset();
+
+        // Clear message after 5 seconds
         setTimeout(() => {
-            contactForm.reset();
             formMessage.style.display = 'none';
-        }, 3000);
+        }, 5000);
     });
 }
 
-// Show form message (success or error)
-function showFormMessage(messageText, type) {
-    if (formMessage) {
-        formMessage.textContent = messageText;
-        formMessage.className = 'form-message ' + type;
-        formMessage.style.display = 'block';
-        
-        // Scroll to message
-        formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+// ===========================
+// FORM HELPERS
+// ===========================
+
+function showFormMessage(message, type) {
+    if (!formMessage) return;
+
+    formMessage.textContent = message;
+    formMessage.className = `form-message ${type}`;
+    formMessage.style.display = 'block';
+
+    // Scroll to message
+    formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// Email validation function
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-// =============================================
-// 6. CTA BUTTON FUNCTIONALITY
-// =============================================
-
-const ctaBtn = document.querySelector('.cta-btn');
-
-if (ctaBtn) {
-    ctaBtn.addEventListener('click', () => {
-        // Scroll to categories section
-        const categoriesSection = document.querySelector('.categories');
-        if (categoriesSection) {
-            categoriesSection.scrollIntoView({ behavior: 'smooth' });
-        }
-    });
+function isValidPhone(phone) {
+    const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+    return phoneRegex.test(phone);
 }
 
-// =============================================
-// 7. CATEGORY LINK CLICK HANDLER
-// =============================================
+// ===========================
+// BUY NOW BUTTON HANDLERS
+// ===========================
 
-const categoryLinks = document.querySelectorAll('.category-link');
+document.querySelectorAll('.buy-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
 
-categoryLinks.forEach(link => {
-    link.addEventListener('click', (event) => {
-        event.preventDefault();
-        const categoryName = link.closest('.category-card').querySelector('h3').textContent;
-        alert('Explore ' + categoryName + '\n\nThis functionality would be implemented in a full application.');
+        // Get product info from the card
+        const card = this.closest('.deal-card');
+        const productName = card.querySelector('.product-name').textContent;
+        const price = card.querySelector('.price').textContent;
+
+        // Create WhatsApp message
+        const whatsappNumber = '91XXXXXXXXXX'; // Replace with actual number
+        const message = encodeURIComponent(
+            `Hi, I'm interested in buying: ${productName} (${price}). Please provide more details.`
+        );
+
+        // Open WhatsApp
+        window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
     });
 });
 
-// =============================================
-// 8. SMOOTH SCROLL ENHANCEMENT
-// =============================================
+// ===========================
+// CATEGORY CARD HANDLERS
+// ===========================
 
-// Smooth scrolling for all anchor links
+document.querySelectorAll('.category-card').forEach(card => {
+    card.addEventListener('click', function() {
+        const category = this.querySelector('h3').textContent;
+        console.log('Category selected:', category);
+
+        // Show search results for category
+        performSearch(category);
+    });
+});
+
+// ===========================
+// SMOOTH SCROLL BEHAVIOR
+// ===========================
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(event) {
+    anchor.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
-        if (href === '#') {
-            event.preventDefault();
-            return;
-        }
-        
+
+        // Skip if it's just "#"
+        if (href === '#') return;
+
+        e.preventDefault();
+
         const target = document.querySelector(href);
         if (target) {
-            event.preventDefault();
             target.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
@@ -237,90 +251,131 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// =============================================
-// 9. SCROLL ANIMATIONS
-// =============================================
+// ===========================
+// MOBILE MENU (Future Enhancement)
+// ===========================
 
-// Observe elements for scroll animation
-function setupScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+// This function is prepared for future mobile menu toggle
+function toggleMobileMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        navLinks.classList.toggle('active');
+    }
+}
+
+// ===========================
+// PAGE INITIALIZATION
+// ===========================
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('JMD Mall website loaded successfully!');
+
+    // Set active navigation link based on current page
+    updateActiveNavLink();
+
+    // Initialize tooltips or other features if needed
+    console.log('Total products available:', allProducts.length);
+});
+
+// ===========================
+// UPDATE ACTIVE NAV LINK
+// ===========================
+
+function updateActiveNavLink() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    // Apply to category cards and value cards
-    const animatedElements = document.querySelectorAll('.category-card, .value-card');
-    animatedElements.forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(element);
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        
+        const href = link.getAttribute('href');
+        if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+            link.classList.add('active');
+        }
     });
 }
 
-// Initialize scroll animations when DOM is loaded
-document.addEventListener('DOMContentLoaded', setupScrollAnimations);
+// ===========================
+// SHOPPING CART (Future Enhancement)
+// ===========================
 
-// =============================================
-// 10. UTILITY FUNCTIONS
-// =============================================
+// Prepared for future shopping cart functionality
+const cart = {
+    items: [],
 
-// Log page information (for debugging)
-function logPageInfo() {
-    console.log('Page Information:');
-    console.log('Current URL: ' + window.location.href);
-    console.log('Page Title: ' + document.title);
-    console.log('Current Time: ' + new Date().toLocaleString());
+    addItem: function(product) {
+        const existingItem = this.items.find(item => item.name === product.name);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            this.items.push({
+                ...product,
+                quantity: 1
+            });
+        }
+        console.log('Cart updated:', this.items);
+    },
+
+    removeItem: function(productName) {
+        this.items = this.items.filter(item => item.name !== productName);
+        console.log('Cart updated:', this.items);
+    },
+
+    getTotal: function() {
+        return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    },
+
+    clear: function() {
+        this.items = [];
+        console.log('Cart cleared');
+    }
+};
+
+// ===========================
+// UTILITY FUNCTIONS
+// ===========================
+
+/**
+ * Format price to Indian Rupees format
+ */
+function formatPrice(price) {
+    return '₹' + price.toLocaleString('en-IN');
 }
 
-// Call on page load
-window.addEventListener('load', () => {
-    logPageInfo();
-    console.log('JMD Mall website loaded successfully!');
-});
-
-// =============================================
-// 11. ACCESSIBILITY ENHANCEMENTS
-// =============================================
-
-// Add keyboard navigation support
-document.addEventListener('keydown', (event) => {
-    // Close mobile menu on Escape key
-    if (event.key === 'Escape' && navMenu.classList.contains('active')) {
-        navMenu.classList.remove('active');
-    }
-});
-
-// =============================================
-// 12. LOCAL STORAGE FOR USER PREFERENCES
-// =============================================
-
-// Save search history (simple example)
-function saveSearchHistory(searchTerm) {
-    let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    
-    // Keep only last 5 searches
-    if (history.length >= 5) {
-        history.pop();
-    }
-    
-    // Add new search at the beginning
-    if (!history.includes(searchTerm)) {
-        history.unshift(searchTerm);
-    }
-    
-    localStorage.setItem('searchHistory', JSON.stringify(history));
+/**
+ * Get current time in HH:MM:SS format
+ */
+function getCurrentTime() {
+    const now = new Date();
+    return now.toLocaleTimeString('en-IN');
 }
 
-// =============================================
-// END OF SCRIPT
-// =============================================
+/**
+ * Log analytics event (prepared for future analytics integration)
+ */
+function logEvent(eventName, eventData) {
+    console.log(`[${getCurrentTime()}] Event: ${eventName}`, eventData);
+}
+
+// ===========================
+// PERFORMANCE MONITORING
+// ===========================
+
+// Log page load performance
+window.addEventListener('load', function() {
+    const perfData = window.performance.timing;
+    const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+    console.log(`Page loaded in ${pageLoadTime}ms`);
+});
+
+// ===========================
+// ERROR HANDLING
+// ===========================
+
+window.addEventListener('error', function(e) {
+    console.error('Error occurred:', e.error);
+});
+
+// Handle unhandled promise rejections
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('Unhandled promise rejection:', e.reason);
+});
