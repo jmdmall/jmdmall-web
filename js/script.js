@@ -179,6 +179,9 @@ function renderProducts(products) {
     }
 
     productsGrid.innerHTML = products.map(createProductCard).join('');
+
+    // observe lazy images after render
+    requestAnimationFrame(() => { window.observeLazyImages && window.observeLazyImages(); });
 }
 
 // ===========================
@@ -189,7 +192,7 @@ function createProductCard(product) {
     const discountPercent = getDiscountPercent(product.mrp, product.selling_price);
     const finalPrice = getFinalPrice(product);
 
-    // compact name and description
+    // compact name and description (one-line name, two-line desc)
     const shortDesc = (product.description || '').split('\n')[0] || '';
 
     // image badge for flat discount displayed on image
@@ -219,11 +222,9 @@ function createProductCard(product) {
                 <span class="mrp-price">₹${formatPrice(product.mrp)}</span>
                 <span class="selling-price">₹${formatPrice(product.selling_price)}</span>
                 ${discountPercent > 0 ? `<span class="discount-percent">${discountPercent}% OFF</span>` : ''}
+                <span class="product-rating small" style="margin-left:auto;">⭐ ${product.rating || '5'} (${product.reviews || '0'})</span>
             </div>
 
-            <div class="product-rating small">
-                ⭐ ${product.rating || '5'} (${product.reviews || '0'})
-            </div>
         </div>
     </div>
     `;
@@ -239,9 +240,7 @@ function attachProductCardListeners() {
 
 // Re-attach after render (no special listeners needed now)
 const originalRenderProducts = renderProducts;
-renderProducts = function(products) {
-    originalRenderProducts(products);
-};
+// renderProducts already redefined above to call observeLazyImages.
 
 // ===========================
 // SEARCH & FILTER (unchanged)
