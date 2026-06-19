@@ -143,12 +143,35 @@
     font-weight:700;
 }
 
+/* Quantity selector */
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.quantity-selector label {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.quantity-selector input {
+    width: 60px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1rem;
+}
+
 /* Action buttons - standard look */
 .cta-group{
     display:flex;
     gap:12px;
     margin-top:18px;
     align-items:center;
+    flex-wrap: wrap;
 }
 
 .whatsapp-btn, .cart-btn, .share-btn{
@@ -162,11 +185,15 @@
     border:none;
     text-decoration:none;
     color:#fff;
+    transition: all 0.2s;
 }
 
 .whatsapp-btn{ background:#25D366; }
+.whatsapp-btn:hover{ background:#1fa753; }
 .cart-btn{ background:#146EB4; }
+.cart-btn:hover{ background:#0f4a7a; }
 .share-btn{ background:transparent; color:var(--text-dark); border:1px solid var(--border-color); padding:10px 12px; font-weight:600; }
+.share-btn:hover{ background: var(--bg-gray); }
 
 /* Assured box and detail table spacing */
 .detail-table{ margin-top:20px; display:grid; gap:10px; }
@@ -175,6 +202,21 @@
 
 /* Rating small star icon */
 .star{ color:#f39c12; margin-right:6px; }
+
+/* Notification */
+.notification-bar {
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    display: none;
+}
+
+.notification-bar.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
 
 /* Responsive adjustments */
 @media(max-width:900px){
@@ -187,6 +229,8 @@
     .thumb{ width:52px; height:52px; }
     .details-column h1{ font-size:1.25rem; }
     .sell-price{ font-size:22px; }
+    .cta-group { flex-direction: column; }
+    .whatsapp-btn, .cart-btn { width: 100%; justify-content: center; }
 }
 
 </style>
@@ -198,6 +242,10 @@
     <div class="nav-container">
         <div class="nav-logo">
             <a href="index.html">JMD Mall</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="cart.html" class="nav-link">Cart</a>
         </div>
     </div>
 </nav>
@@ -267,4 +315,202 @@ function parseCSVLine(line){
     let inQuotes = false;
     for(let i=0;i<line.length;i++){
         const ch = line[i];
-        if(ch==='
+        if(ch==='"'){
+            if(inQuotes && line[i+1]==='"'){
+                cur += '"';
+                i++;
+            }else{
+                inQuotes = !inQuotes;
+            }
+            continue;
+        }
+        if(ch===',' && !inQuotes){
+            result.push(cur);
+            cur = '';
+            continue;
+        }
+        cur += ch;
+    }
+    result.push(cur);
+    return result;
+}
+
+function renderProduct(product){
+    const images = product.images && product.images.length > 0 ? product.images : [product.image || PLACEHOLDER];
+    const mrp = Number(product.mrp || 0);
+    const selling = Number(product.selling_price || 0);
+    const discountPercent = mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+    const flatDiscount = Number(product.discount_amount || 0);
+
+    const html = `
+    <div class="product-detail-card">
+        <div class="gallery-column">
+            <div class="main-image-wrap">
+                <img id="mainImage" src="${images[0]}" alt="${escapeHTML(product.name)}" onerror="this.src='${PLACEHOLDER}'">
+                ${images.length > 1 ? `
+                    <button class="nav-arrow nav-left" onclick="prevImage()">❮</button>
+                    <button class="nav-arrow nav-right" onclick="nextImage()">❯</button>
+                ` : ''}
+            </div>
+            ${images.length > 1 ? `
+                <div class="gallery-thumbs" id="thumbsContainer">
+                    ${images.map((img, i) => `
+                        <div class="thumb ${i === 0 ? 'active' : ''}" onclick="changeImage(${i})">
+                            <img src="${img}" alt="Image ${i+1}" onerror="this.src='${PLACEHOLDER}'">
+                        </div>
+                    `).join('')}
+                </div>
+            ` : ''}
+        </div>
+
+        <div class="details-column">
+            <h1>${escapeHTML(product.name)}</h1>
+            
+            <div class="product-meta">
+                <span>⭐ ${product.rating || '5'} (${product.reviews || '0'} reviews)</span>
+                <span>Category: ${escapeHTML(product.category || 'General')}</span>
+            </div>
+
+            <div class="price-row">
+                ${mrp > 0 ? `<span class="mrp">₹${formatPrice(mrp)}</span>` : ''}
+                <span class="sell-price">₹${formatPrice(selling)}</span>
+                ${discountPercent > 0 ? `<span class="discount-percent">${discountPercent}% OFF</span>` : ''}
+            </div>
+
+            ${flatDiscount > 0 ? `<div class="flat-discount-pill">Save ₹${formatPrice(flatDiscount)}</div>` : ''}
+
+            <div class="quantity-selector">
+                <label for="quantityInput">Quantity:</label>
+                <input type="number" id="quantityInput" min="1" max="100" value="1">
+            </div>
+
+            <div id="notification" class="notification-bar"></div>
+
+            <div class="cta-group">
+                <button class="cart-btn" onclick="addProductToCart('${escapeAttr(JSON.stringify({
+                    id: product.id,
+                    name: product.name,
+                    selling_price: selling,
+                    image: images[0]
+                }))}')">
+                    🛒 Add to Cart
+                </button>
+                <a href="https://wa.me/${WHATSAPP}?text=Hi%20JMD%20Mall%2C%20I%20am%20interested%20in%20${encodeURIComponent(product.name)}%20(Product%20ID%3A%20${product.id})" target="_blank" class="whatsapp-btn">
+                    💬 WhatsApp
+                </a>
+            </div>
+
+            <div class="detail-table">
+                <div><strong>Brand:</strong> ${escapeHTML(product.brand || 'N/A')}</div>
+                <div><strong>Stock:</strong> ${product.stock ? '✅ In Stock' : '❌ Out of Stock'}</div>
+            </div>
+
+            ${product.description ? `
+                <div class="assured-box">
+                    <strong>Description:</strong>
+                    <p style="margin-top: 8px; line-height: 1.6;">${escapeHTML(product.description)}</p>
+                </div>
+            ` : ''}
+
+            <div class="assured-box">
+                <div>✅ JMDMall Assured</div>
+                <div style="margin-top: 8px;">🚚 Fast Delivery</div>
+                <div style="margin-top: 8px;">💵 Cash on Delivery Available</div>
+            </div>
+        </div>
+    </div>
+    `;
+
+    document.getElementById('productContainer').innerHTML = html;
+    setupImageGallery(images);
+}
+
+let currentImageIndex = 0;
+let productImages = [];
+
+function setupImageGallery(images) {
+    productImages = images;
+    currentImageIndex = 0;
+}
+
+function changeImage(index) {
+    currentImageIndex = index;
+    document.getElementById('mainImage').src = productImages[index];
+    document.querySelectorAll('.thumb').forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === index);
+    });
+}
+
+function nextImage() {
+    currentImageIndex = (currentImageIndex + 1) % productImages.length;
+    changeImage(currentImageIndex);
+}
+
+function prevImage() {
+    currentImageIndex = (currentImageIndex - 1 + productImages.length) % productImages.length;
+    changeImage(currentImageIndex);
+}
+
+function addProductToCart(productJson) {
+    try {
+        const product = JSON.parse(productJson);
+        const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+        
+        // Call cart.js function
+        if (typeof addToCart === 'function') {
+            addToCart(product, quantity);
+        } else {
+            // Fallback if cart.js not loaded
+            const CART_KEY = 'jmdmall_cart_v1';
+            const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            const existing = cart.find(item => item.id === product.id);
+            
+            if (existing) {
+                existing.quantity += quantity;
+            } else {
+                cart.push({ ...product, quantity });
+            }
+            
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            showNotification('✅ Product added to cart!');
+            setTimeout(() => {
+                window.location.href = 'cart.html';
+            }, 500);
+        }
+    } catch (e) {
+        console.error('Error adding to cart:', e);
+        showNotification('Error adding to cart', 'error');
+    }
+}
+
+function showNotification(message, type = 'success') {
+    const notif = document.getElementById('notification');
+    notif.textContent = message;
+    notif.className = `notification-bar ${type}`;
+    setTimeout(() => {
+        notif.className = 'notification-bar';
+    }, 3000);
+}
+
+function formatPrice(price) {
+    return Number(price || 0).toLocaleString('en-IN');
+}
+
+function escapeHTML(text) {
+    if (!text) return '';
+    const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'};
+    return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
+function escapeAttr(text) {
+    return text.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+}
+
+// Load product on page load
+document.addEventListener('DOMContentLoaded', loadProduct);
+</script>
+
+<script src="js/cart.js"></script>
+
+</body>
+</html>
