@@ -26,6 +26,9 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 
 document.addEventListener('DOMContentLoaded', async function () {
 
+    // initialize GA4 if configured (meta tag or global variable)
+    initGA4FromMeta();
+
     await loadProducts();
 
     setupEventListeners();
@@ -61,12 +64,42 @@ async function getProductsCached(){
     }
 }
 
+// GA4 bootstrap: reads <meta name="ga-id" content="G-XXXX"> or window.GA_MEASUREMENT_ID
+function initGA4FromMeta(){
+    try{
+        const meta = document.querySelector('meta[name="ga-id"]');
+        const id = (meta && meta.content) || window.GA_MEASUREMENT_ID;
+        if(!id) return;
+        // inject gtag script
+        if(!window.gtag){
+            const s1 = document.createElement('script');
+            s1.async = true;
+            s1.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+            document.head.appendChild(s1);
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);} // eslint-disable-line no-inner-declarations
+            window.gtag = function(){ window.dataLayer.push(arguments); };
+            window.gtag('js', new Date());
+            window.gtag('config', id, { 'send_page_view': false }); // we'll send events manually
+            console.log('GA4 initialized', id);
+        }
+    }catch(e){ console.warn('initGA4 error', e); }
+}
+
 function trackEvent(name, data = {}){
     const payload = { event: name, ...data };
     // console log for lightweight analytics
     try{ console.log('analytics', payload); } catch(e){}
     // push to dataLayer if present
     try{ if(window.dataLayer) window.dataLayer.push(payload); } catch(e){}
+    // if gtag is available, send as GA4 event (map event name and params)
+    try{
+        if(window.gtag){
+            // GA4 reserved event name rules: convert to lowercase underscores
+            const gaName = String(name).replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+            window.gtag('event', gaName, data);
+        }
+    }catch(e){ console.warn('gtag send failed', e); }
 }
 
 // ===========================
@@ -207,15 +240,16 @@ function isHotDeal(product) {
 }
 
 // ===========================
-// CATEGORY HELPERS
+// CATEGORY HELPERS (with counts)
 // ===========================
 
-function getUniqueCategories(products){
+function getUniqueCategoriesWithCount(products){
     const map = {};
     products.forEach(p=>{
         const c = (p.category || 'Uncategorized').trim();
         if(!c) return;
-        if(!map[c]) map[c] = { name: c, sampleImage: p.image || 'images/placeholder.svg' };
+        if(!map[c]) map[c] = { name: c, sampleImage: p.image || 'images/placeholder.svg', count: 0 };
+        map[c].count++;
     });
     return Object.values(map);
 }
@@ -223,11 +257,14 @@ function getUniqueCategories(products){
 function renderCategories(products){
     const container = document.getElementById('categoriesGrid');
     if(!container) return;
-    const cats = getUniqueCategories(products);
+    const cats = getUniqueCategoriesWithCount(products);
     container.innerHTML = cats.map(cat => `
       <div class="category-tile" data-category="${escapeHTML(cat.name)}">
         <a href="category.html?cat=${encodeURIComponent(cat.name)}" style="text-decoration:none;color:inherit;">
-          <div class="category-image"><img src="${cat.sampleImage}" loading="lazy" alt="${escapeHTML(cat.name)}"></div>
+          <div class="category-image">
+            <img src="${cat.sampleImage}" loading="lazy" alt="${escapeHTML(cat.name)}">
+            <div class="category-count-badge">${cat.count}</div>
+          </div>
           <div class="category-name">${escapeHTML(cat.name)}</div>
         </a>
       </div>
@@ -269,22 +306,19 @@ function renderProductCards(products, append = false){
 }
 
 // ===========================
-// PRODUCT CARD (GRID) - adjusted layout for compact Flipkart-like box
+// PRODUCT CARD (GRID)
 // ===========================
 
 function createProductCard(product) {
     const discountPercent = getDiscountPercent(product.mrp, product.selling_price);
     const finalPrice = getFinalPrice(product);
 
-    // compact name and description (one-line name, two-line desc)
     const shortDesc = (product.description || '').split('\n')[0] || '';
 
-    // image badge for flat discount displayed on image (now shows Save ₹X)
     const flatDiscountBadge = Number(product.discount_amount) > 0
         ? `<div class="flat-image-badge">Save ₹${Number(product.discount_amount).toLocaleString('en-IN')}</div>`
         : '';
 
-    // rating badge to show on the image (bottom-left)
     const imageRatingBadge = `<div class="image-rating-badge">⭐ ${escapeHTML(product.rating || '5')} <span class="rating-count">(${formatCount(product.reviews || '0')})</span></div>`;
 
     const imgSrc = product.image || 'images/placeholder.svg';
@@ -318,19 +352,17 @@ function createProductCard(product) {
 }
 
 // ===========================
-// ATTACH CARD EVENTS (grid has no buy/share buttons)
+// ATTACH CARD EVENTS
 // ===========================
 
 function attachProductCardListeners() {
     // nothing needed for compact grid cards
 }
 
-// Re-attach after render (no special listeners needed now)
 const originalRenderProducts = renderProducts;
-// renderProducts already redefined above to call observeLazyImages.
 
 // ===========================
-// SEARCH & FILTER (unchanged)
+// SEARCH & FILTER
 // ===========================
 
 function handleSearch() {
@@ -381,7 +413,6 @@ function setupEventListeners() {
 function formatPrice(price) { return Number(price || 0).toLocaleString('en-IN'); }
 function escapeHTML(text) { if (!text) return ''; const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#039;"}; return String(text).replace(/[&<>\"']/g,m=>map[m]); }
 
-// Format large counts: 1200 -> 1.2K, 1,200,000 -> 1.2M
 function formatCount(value){
     const n = Number(String(value).replace(/[^0-9.-]+/g,'')) || 0;
     if (n >= 1000000) return (Math.round(n/100000)/10).toFixed(1).replace(/\.0$/,'') + 'M';
