@@ -37,14 +37,15 @@
   margin-top: 6px;
 }
 
+/* Make MRP and selling price the same smaller size */
 .price-row-grid .mrp-price {
-  font-size: 0.82rem;
+  font-size: 0.95rem; /* reduced and same as selling-price */
   color: #777;
   text-decoration: line-through;
 }
 
 .price-row-grid .selling-price {
-  font-size: 1.05rem;
+  font-size: 0.95rem; /* same size as MRP */
   font-weight: 700;
   color: var(--primary-color);
   white-space: nowrap;
@@ -81,10 +82,28 @@
   font-weight:600;
 }
 
+/* Rating badge over image (moved from price area) */
+.image-rating-badge{
+  position:absolute;
+  bottom:8px;
+  left:8px; /* below corner of the image */
+  background:rgba(0,0,0,0.7);
+  color:#fff;
+  padding:6px 8px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:700;
+  z-index:6;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
 /* responsive tweaks */
 @media (max-width:480px) {
   .grid-product-name { font-size:0.92rem; }
   .grid-product-desc { font-size:0.78rem; }
-  .price-row-grid .selling-price { font-size:1rem; }
+  .price-row-grid .selling-price { font-size:0.92rem; }
   .flat-image-badge { font-size:11px; padding:5px 7px; }
+  .image-rating-badge{ font-size:11px; padding:5px 7px; bottom:6px; left:6px; }
 }
