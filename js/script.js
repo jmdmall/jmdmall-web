@@ -195,10 +195,13 @@ function createProductCard(product) {
     // compact name and description (one-line name, two-line desc)
     const shortDesc = (product.description || '').split('\n')[0] || '';
 
-    // image badge for flat discount displayed on image
+    // image badge for flat discount displayed on image (keeps existing rupee-off badge)
     const flatDiscountBadge = Number(product.discount_amount) > 0
         ? `<div class="flat-image-badge">₹${Number(product.discount_amount).toLocaleString('en-IN')} off</div>`
         : '';
+
+    // rating badge to show on the image (bottom-left)
+    const imageRatingBadge = `<div class="image-rating-badge">⭐ ${escapeHTML(product.rating || '5')} <span class="rating-count">(${formatCount(product.reviews || '0')})</span></div>`;
 
     const imgSrc = product.image || 'images/placeholder.svg';
 
@@ -208,6 +211,7 @@ function createProductCard(product) {
             <div class="product-image-wrapper">
                 <img class="product-image" src="${imgSrc}" alt="${escapeHTML(product.name)}" loading="lazy" onerror="this.src='images/placeholder.svg'">
                 ${flatDiscountBadge}
+                ${imageRatingBadge}
             </div>
         </a>
 
@@ -221,8 +225,7 @@ function createProductCard(product) {
             <div class="price-row-grid">
                 <span class="mrp-price">₹${formatPrice(product.mrp)}</span>
                 <span class="selling-price">₹${formatPrice(product.selling_price)}</span>
-                ${discountPercent > 0 ? `<span class="discount-percent">${discountPercent}% OFF</span>` : ''}
-                <span class="product-rating small">⭐ ${product.rating || '5'} (${formatCount(product.reviews || '0')})</span>
+                ${discountPercent > 0 ? `<span class="discount-percent">${discountPercent}%</span>` : ''}
             </div>
 
         </div>
@@ -292,7 +295,7 @@ function setupEventListeners() {
 // ===========================
 
 function formatPrice(price) { return Number(price || 0).toLocaleString('en-IN'); }
-function escapeHTML(text) { if (!text) return ''; const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#039;"}; return String(text).replace(/[&<>"']/g,m=>map[m]); }
+function escapeHTML(text) { if (!text) return ''; const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#039;"}; return String(text).replace(/[&<>\"']/g,m=>map[m]); }
 
 // Format large counts: 1200 -> 1.2K, 1,200,000 -> 1.2M
 function formatCount(value){
