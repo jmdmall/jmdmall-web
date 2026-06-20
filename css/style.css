@@ -105,7 +105,7 @@ a:hover {
 }
 
 /* ==========================================================================
-   4. NAVIGATION BAR
+   4. NEW PREMIUM RESPONSIVE HEADER ENGINE
    ========================================================================== */
 .navbar {
     background-color: var(--bg-light);
@@ -114,28 +114,164 @@ a:hover {
     top: 0;
     z-index: 1000;
     box-shadow: var(--shadow-light);
+    padding: 0.75rem 0;
 }
 
 .nav-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0.8rem 1.5rem;
-    gap: 2rem;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr; /* Stacks vertically on mobile by default */
+    gap: 1rem;
+    align-items: center;
 }
 
-.nav-logo a {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--secondary-color);
+/* Desktop 3-Column Grid Transformation */
+@media (min-width: 992px) {
+    .nav-container {
+        grid-template-columns: 220px 1fr auto;
+        gap: 1.5rem;
+    }
+}
+
+/* Column 1: Logo & Text Combo */
+.nav-brand-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+@media (min-width: 992px) {
+    .nav-brand-wrapper {
+        align-items: flex-start; /* Align left on desktop */
+    }
+}
+
+.nav-logo-img {
+    height: 45px; /* Clean, professional corporate scaling */
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.nav-logo-subtext {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+/* Column 2: Center Contact Cluster Dashboard */
+.nav-center-contacts {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    background-color: var(--bg-gray);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.header-contact-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 5px;
     transition: var(--transition);
 }
 
-.nav-logo a:hover {
+.header-contact-link:hover {
+    color: var(--secondary-color);
+}
+
+/* Column 3: Search Box & Nav Links Cluster */
+.nav-right-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+@media (min-width: 992px) {
+    .nav-right-actions {
+        width: 420px; /* Precise layout containment width */
+    }
+}
+
+.search-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-gray);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.search-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: var(--bg-light);
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.search-btn:hover {
+    background-color: #ff8c3b;
+}
+
+/* Inline Compact Row Links Layout */
+.header-menu-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+@media (min-width: 992px) {
+    .header-menu-links {
+        justify-content: flex-end; /* Align right on desktop */
+    }
+}
+
+.header-menu-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    position: relative;
+    transition: var(--transition);
+}
+
+.header-menu-link:hover,
+.header-menu-link.active {
     color: var(--primary-color);
 }
+
+.header-menu-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+/* Hide old top contact bar utility class rules since it's merged inside navigation */
+.top-contact-bar { display: none !important; }
 
 .search-bar {
     flex: 1;
