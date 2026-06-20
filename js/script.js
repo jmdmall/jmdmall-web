@@ -26,6 +26,9 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', async function () {
+    // Initialize Location Engine
+    initLocationEngine();
+
     // Initialize GA4 if configured via meta properties
     initGA4FromMeta();
 
@@ -37,6 +40,93 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     initSlideshow();
 });
+
+// ==========================================================================
+// LOCATION MANAGEMENT ENGINE
+// ==========================================================================
+
+function initLocationEngine() {
+    const locationDisplay = document.getElementById('locationDisplay');
+    const editLocationBtn = document.getElementById('editLocationBtn');
+    const locationModal = document.getElementById('locationModal');
+    const closeLocationModal = document.getElementById('closeLocationModal');
+    const saveLocationBtn = document.getElementById('saveLocationBtn');
+    const manualLocationInput = document.getElementById('manualLocationInput');
+
+    const LOCAL_STORAGE_KEY = 'jmdmall_user_location';
+
+    // 1. Try to fetch from Local User Memory
+    let savedLocation = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedLocation) {
+        if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${savedLocation}`;
+    } else {
+        // 2. Fallback to Auto-Detection via Browser Geolocation API
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    try {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        // Reverse geocode using openstreetmap public API
+                        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                        const data = await response.json();
+                        
+                        // Extract town, city, or neighborhood metrics safely
+                        const detectedCity = data.address.city || data.address.town || data.address.village || data.address.state || "Nepal";
+                        
+                        localStorage.setItem(LOCAL_STORAGE_KEY, detectedCity);
+                        if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${detectedCity}`;
+                    } catch (err) {
+                        fallbackLocation();
+                    }
+                },
+                () => { fallbackLocation(); }
+            );
+        } else {
+            fallbackLocation();
+        }
+    }
+
+    function fallbackLocation() {
+        if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: Nepal`;
+    }
+
+    // 3. Modal Overlay Window Event Listeners Hooks
+    if (editLocationBtn && locationModal) {
+        editLocationBtn.addEventListener('click', () => {
+            if (manualLocationInput) {
+                // Pre-fill input block text with current layout data
+                const currentText = locationDisplay.textContent.replace('DELIVERING AT: ', '');
+                manualLocationInput.value = currentText === 'Detecting your delivery area...' ? '' : currentText;
+            }
+            locationModal.style.display = 'flex';
+        });
+    }
+
+    if (closeLocationModal && locationModal) {
+        closeLocationModal.addEventListener('click', () => {
+            locationModal.style.display = 'none';
+        });
+    }
+
+    if (saveLocationBtn && locationModal && manualLocationInput) {
+        saveLocationBtn.addEventListener('click', () => {
+            const userText = manualLocationInput.value.trim();
+            if (userText) {
+                localStorage.setItem(LOCAL_STORAGE_KEY, userText);
+                if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${userText}`;
+                locationModal.style.display = 'none';
+            }
+        });
+    }
+
+    // Close window option if backdrop is clicked directly
+    window.addEventListener('click', (e) => {
+        if (e.target === locationModal) {
+            locationModal.style.display = 'none';
+        }
+    });
+}
 
 // ==========================================================================
 // CACHING & ANALYTICS HELPERS
@@ -233,14 +323,12 @@ function renderCategories(productsArray){
     if (!container) return;
     const cats = getUniqueCategoriesWithCount(productsArray);
     
-    // Renders the flat content tile matching your updated responsive CSS 
     container.innerHTML = cats.map(cat => `
         <div class="category-tile" data-category="${escapeHTML(cat.name)}">
             <h3>${escapeHTML(cat.name)} (${cat.count})</h3>
         </div>
     `).join('');
 
-    // Dynamic filtering architecture so click filters inline instead of a page jump
     container.querySelectorAll('.category-tile').forEach(tile => {
         tile.addEventListener('click', () => {
             const chosenCategory = tile.getAttribute('data-category');
@@ -281,15 +369,12 @@ function createProductCard(product) {
     const discountPercent = getDiscountPercent(product.mrp, product.selling_price);
     const flatDiscountAmount = Math.round(Number(product.mrp || 0) - Number(product.selling_price || 0));
 
-    // Fallback safe description extractors 
     const shortDesc = product.short_description || (product.description || '').split('\n')[0] || '';
 
-    // Calculated absolute discount label overlay string
     const flatDiscountBadge = flatDiscountAmount > 0
         ? `<div class="flat-image-badge">Rs. ${flatDiscountAmount.toLocaleString('en-IN')} OFF</div>`
         : '';
 
-    // Calculated absolute star ratings system mapping over image layout
     const mockRating = product.rating || (4.0 + (Number(product.id || 0) % 10) * 0.1).toFixed(1);
     const mockReviewsCount = product.reviews || (45 + (Number(product.id || 0) * 12));
     const imageRatingBadge = `<div class="image-rating-badge">⭐ ${mockRating} <span class="rating-count">(${formatCount(mockReviewsCount)})</span></div>`;
