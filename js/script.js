@@ -323,29 +323,14 @@ function renderCategories(productsArray){
     if (!container) return;
     const cats = getUniqueCategoriesWithCount(productsArray);
     
+    // Wrapped back inside an anchor tag to cleanly navigate to category.html
     container.innerHTML = cats.map(cat => `
         <div class="category-tile" data-category="${escapeHTML(cat.name)}">
-            <h3>${escapeHTML(cat.name)} (${cat.count})</h3>
+            <a href="category.html?cat=${encodeURIComponent(cat.name)}" style="text-decoration:none;color:inherit;width:100%;display:block;">
+                <h3>${escapeHTML(cat.name)} (${cat.count})</h3>
+            </a>
         </div>
     `).join('');
-
-    container.querySelectorAll('.category-tile').forEach(tile => {
-        tile.addEventListener('click', () => {
-            const chosenCategory = tile.getAttribute('data-category');
-            
-            filterButtons.forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-filter') === chosenCategory);
-            });
-            
-            activeFilter = chosenCategory;
-            
-            filteredProducts = allProducts.filter(p => p.category === chosenCategory);
-            renderProducts(filteredProducts);
-            
-            const targetGrid = document.getElementById('productsGrid');
-            if (targetGrid) targetGrid.scrollIntoView({ behavior: 'smooth' });
-        });
-    });
 }
 
 // ==========================================================================

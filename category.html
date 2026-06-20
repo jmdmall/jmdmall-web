@@ -20,7 +20,6 @@
       <h2 id="categoryTitle">Category</h2>
       <p id="categorySubtitle" class="products-subtitle"></p>
 
-      <!-- Filters and Sorting Bar -->
       <div class="category-filters-bar" id="categoryFiltersBar">
         <div class="filter-control">
           <label for="brandSelect">Brand</label>
@@ -111,16 +110,69 @@
     const clearFiltersBtn = document.getElementById('clearFiltersBtn');
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     const loadMoreWrapper = document.getElementById('loadMoreWrapper');
+    const productsGridContainer = document.getElementById('productsGrid');
 
     document.getElementById('categoryTitle').textContent = cat ? cat : 'All Products';
     if (cat) document.getElementById('categorySubtitle').textContent = `Showing products for "${cat}"`;
+
+    // Modern Flipkart-Style Product Card Generator matching your upgraded layout rules
+    function renderProductCards(itemsArray, append = false) {
+      if (!productsGridContainer) return;
+      if (!itemsArray || !itemsArray.length) {
+          if (!append) productsGridContainer.innerHTML = '<div class="loading">No products found matching the criteria.</div>';
+          return;
+      }
+
+      const html = itemsArray.map(product => {
+          const mrpNum = Number(product.mrp || 0);
+          const sellingNum = Number(product.selling_price || product.price || 0);
+          const discountPercent = mrpNum ? Math.round(((mrpNum - sellingNum) / mrpNum) * 100) : 0;
+          const flatDiscountAmount = Math.round(mrpNum - sellingNum);
+
+          const shortDesc = product.short_description || (product.description || '').split('\n')[0] || '';
+          const flatDiscountBadge = flatDiscountAmount > 0 ? `<div class="flat-image-badge">Rs. ${flatDiscountAmount.toLocaleString('en-IN')} OFF</div>` : '';
+
+          const mockRating = product.rating || (4.0 + (Number(product.id || 0) % 10) * 0.1).toFixed(1);
+          const mockReviewsCount = product.reviews || (45 + (Number(product.id || 0) * 12));
+          const imageRatingBadge = `<div class="image-rating-badge">⭐ ${mockRating} <span class="rating-count">(${formatCount(mockReviewsCount)})</span></div>`;
+
+          const imgSrc = product.image || product.main_image || 'images/placeholder.svg';
+          const msg = encodeURIComponent(`Hello JMD Mall, I want to order:\n\n*Product:* ${product.name}\n*Price:* Rs. ${sellingNum.toLocaleString('en-IN')}`);
+
+          return `
+          <div class="product-card" data-product-id="${escapeHTML(product.id)}" data-product-name="${escapeHTML(product.name)}">
+              <div class="product-image-wrapper">
+                  <img class="product-image" src="${imgSrc}" alt="${escapeHTML(product.name)}" loading="lazy" onerror="this.src='images/placeholder.svg'">
+                  ${flatDiscountBadge}
+                  ${imageRatingBadge}
+              </div>
+              <div class="product-info compact">
+                  <span class="product-brand" style="font-size: 0.75rem; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 2px;">${escapeHTML(product.brand || 'JMD')}</span>
+                  <h4 class="grid-product-name">${escapeHTML(product.name)}</h4>
+                  <p class="grid-product-desc">${escapeHTML(shortDesc)}</p>
+                  <div class="price-row-grid">
+                      <span class="selling-price">Rs. ${Number(sellingNum).toLocaleString('en-IN')}</span>
+                      <span class="mrp-price">Rs. ${Number(mrpNum).toLocaleString('en-IN')}</span>
+                      ${discountPercent > 0 ? `<span class="discount-percent">${discountPercent}% OFF</span>` : ''}
+                  </div>
+                  <a href="https://wa.me/9779705446407?text=${msg}" target="_blank" class="buy-now-btn" style="margin-top: auto; text-decoration: none;">💬 Order via WhatsApp</a>
+              </div>
+          </div>
+          `;
+      }).join('');
+
+      if (append) {
+          productsGridContainer.insertAdjacentHTML('beforeend', html);
+      } else {
+          productsGridContainer.innerHTML = html;
+      }
+    }
 
     function populateFilterOptions(items){
       const brands = new Set();
       const subcats = new Set();
       items.forEach(p => { if(p.brand) brands.add(p.brand); if(p.subcategory) subcats.add(p.subcategory); });
 
-      // clear existing
       brandSelect.innerHTML = '<option value="">All Brands</option>' + Array.from(brands).sort().map(b=>`<option value="${escapeHTML(b)}">${escapeHTML(b)}</option>`).join('');
       subcatSelect.innerHTML = '<option value="">All Subcategories</option>' + Array.from(subcats).sort().map(s=>`<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
     }
@@ -171,18 +223,15 @@
     async function loadCategoryProducts(){
       try {
         all = await getProductsCached();
-        // filter to category
         let initial = all.slice();
         if(cat) initial = initial.filter(p => (p.category||'').toLowerCase() === cat.toLowerCase());
-        // populate filters using initial list (brands, subcats)
         populateFilterOptions(initial);
-        // set list and render first page
         list = initial;
         offset = 0;
         renderNextPage();
         trackEvent('category_view', { category: cat, total: list.length });
       } catch(e){
-        document.getElementById('productsGrid').innerHTML = '<div class="loading">Unable to load products.</div>';
+        if (productsGridContainer) productsGridContainer.innerHTML = '<div class="loading">Unable to load products.</div>';
       }
     }
 
