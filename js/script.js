@@ -27,6 +27,7 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 
 document.addEventListener('DOMContentLoaded', async function () {
     initLocationEngine();
+    initPromoBannerEngine(); // Added Ad notice engine initialization trigger
     initGA4FromMeta();
     await loadProducts();
     setupEventListeners();
@@ -492,4 +493,36 @@ function initSlideshow() {
     if (prevBtn) prevBtn.addEventListener('click', prevSlide);
 
     setInterval(nextSlide, 4000);
+}
+
+// ==========================================================================
+// SESSION-BASED PROMOTIONAL ADVERTISEMENT NOTICE CONTROLLER
+// ==========================================================================
+function initPromoBannerEngine() {
+    const noticeModal = document.getElementById('noticeModal');
+    const closeNoticeBtn = document.getElementById('closeNoticeBtn');
+    const SESSION_BANNER_KEY = 'jmdmall_promo_seen';
+
+    if (!noticeModal || !closeNoticeBtn) return;
+
+    const alertSeen = sessionStorage.getItem(SESSION_BANNER_KEY);
+
+    if (!alertSeen) {
+        setTimeout(() => {
+            noticeModal.style.display = 'flex';
+        }, 800);
+    }
+
+    closeNoticeBtn.addEventListener('click', dismissBanner);
+
+    noticeModal.addEventListener('click', (e) => {
+        if (e.target === noticeModal) {
+            dismissBanner();
+        }
+    });
+
+    function dismissBanner() {
+        noticeModal.style.display = 'none';
+        sessionStorage.setItem(SESSION_BANNER_KEY, 'true');
+    }
 }

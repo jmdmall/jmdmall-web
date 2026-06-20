@@ -506,6 +506,7 @@ a:hover {
     transform: scale(1.05);
 }
 
+/* Floating discount-off overlay badge styling rules */
 .flat-image-badge {
     position: absolute;
     top: 8px;
@@ -519,6 +520,7 @@ a:hover {
     z-index: 6;
 }
 
+/* Overlaid absolute rating elements layout styling rules */
 .image-rating-badge {
     position: absolute;
     bottom: 8px;
@@ -1094,4 +1096,68 @@ a:hover {
     .action-btn { padding: 0.6rem; font-size: 0.85rem; }
     .footer-container { grid-template-columns: 1fr; gap: 1.5rem; }
     .cta-section { margin: 2rem 1rem 3rem 1rem; padding: 2rem 1rem; }
+}
+
+/* ==========================================================================
+   14. ENTRY FULL-SCREEN ANNOUNCEMENT NOTICE MODAL POPUP (AD-BLOCK IMMUNE)
+   ========================================================================== */
+.announcement-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Solid deep shadow opacity */
+    display: none; /* Injected and manipulated cleanly by script.js runtime values */
+    justify-content: center;
+    align-items: center;
+    z-index: 5000; /* Stays fixed cleanly over top nav menus and product card relative wrappers */
+    padding: 1.5rem;
+}
+
+.notice-content {
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notice-image {
+    width: 100%;
+    height: auto;
+    max-height: 80vh; /* Prevents overflow clipping on small screen heights */
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    display: block;
+}
+
+.notice-close-btn {
+    position: absolute;
+    top: -40px; /* Aligned beautifully floating directly over the target media layout */
+    right: 0;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 2.2rem;
+    font-weight: 300;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition);
+}
+
+.notice-close-btn:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+@media (max-width: 480px) {
+    .announcement-modal { padding: 1rem; }
+    .notice-close-btn {
+        top: -35px;
+        font-size: 1.8rem;
+    }
 }
