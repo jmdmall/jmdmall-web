@@ -245,7 +245,7 @@ a:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    display: none; /* Controlled dynamically by JavaScript */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 2000;
@@ -320,7 +320,7 @@ a:hover {
 }
 
 /* ==========================================================================
-   6. CATEGORIES SECTION
+   6. CATEGORIES SECTION (Upgraded Flipkart-Style Edge-to-Edge Compact Layout)
    ========================================================================== */
 .categories-section {
     background-color: var(--bg-light);
@@ -338,17 +338,15 @@ a:hover {
 
 .category-tile {
     background: #ffffff;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color) !important;
     border-radius: 8px;
-    padding: 20px 15px;
+    padding: 0 !important; /* Strips old padding box frames so imagery touches card boundaries */
     text-align: center;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100px;
+    overflow: hidden; /* Encapsulates asset content safely within border corner radius limits */
     box-shadow: var(--shadow-light);
 }
 
@@ -358,10 +356,31 @@ a:hover {
     border-color: var(--secondary-color);
 }
 
-.category-tile h3 {
-    margin: 0;
-    font-size: 1rem;
-    color: #333333;
+.category-image {
+    width: 100% !important;
+    height: 130px !important; /* Fixed responsive block height aspect tracking */
+    background-color: var(--bg-gray);
+    overflow: hidden;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.category-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* Forces asset block space filling seamlessly without squishing */
+    display: block !important;
+}
+
+.category-name {
+    padding: 8px 6px !important;
+    font-size: 0.82rem !important; /* Downscaled compact text design size */
+    font-weight: 600;
+    color: var(--text-dark);
+    white-space: nowrap !important; /* Constrains typography explicitly down to a single row line */
+    overflow: hidden !important; /* Cleans layout breaking text overflow anomalies */
+    text-overflow: ellipsis !important; /* Implements trailing (...) truncation for long names */
+    line-height: 1.2 !important;
 }
 
 /* ==========================================================================
@@ -487,7 +506,6 @@ a:hover {
     transform: scale(1.05);
 }
 
-/* Floating discount-off overlay badge styling rules */
 .flat-image-badge {
     position: absolute;
     top: 8px;
@@ -501,7 +519,6 @@ a:hover {
     z-index: 6;
 }
 
-/* Overlaid absolute rating elements layout styling rules */
 .image-rating-badge {
     position: absolute;
     bottom: 8px;
@@ -981,7 +998,7 @@ a:hover {
 }
 
 /* ==========================================================================
-   13. MULTI-PLATFORM MEDIA RESPONSIVE HOOK BREAKPOINTS
+   13. MULTI-PLATFORM RESPONSIVE HOOK BREAKPOINTS
    ========================================================================== */
 @media (min-width: 768px) {
     .nav-container {

@@ -288,19 +288,23 @@ function getUniqueCategoriesWithCount(productsArray){
     return Object.values(map);
 }
 
+// ==========================================================================
+// CATEGORIES RENDERING ENGINE (Restored Links & Full Edge-to-Edge Images)
+// ==========================================================================
+
 function renderCategories(productsArray){
     const container = document.getElementById('categoriesGrid');
     if (!container) return;
     const cats = getUniqueCategoriesWithCount(productsArray);
     
-    // Restored category image rendering and link navigation pathing to category.html
+    // Renders structural HTML markup cleanly to allow CSS to manage widths and padding
     container.innerHTML = cats.map(cat => `
         <div class="category-tile" data-category="${escapeHTML(cat.name)}">
-            <a href="category.html?cat=${encodeURIComponent(cat.name)}" style="text-decoration:none;color:inherit;width:100%;display:block;">
-                <div class="category-image" style="width: 100%; height: 120px; background-color: var(--bg-gray); overflow:hidden; border-radius:6px; margin-bottom:8px;">
-                    <img src="${cat.sampleImage}" loading="lazy" alt="${escapeHTML(cat.name)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='images/placeholder.svg'">
+            <a href="category.html?cat=${encodeURIComponent(cat.name)}" style="text-decoration:none; color:inherit; width:100%; display:block;">
+                <div class="category-image">
+                    <img src="${cat.sampleImage}" loading="lazy" alt="${escapeHTML(cat.name)}" onerror="this.src='images/placeholder.svg'">
                 </div>
-                <div class="category-name" style="font-weight:600; font-size:0.95rem; color:var(--text-dark);">${escapeHTML(cat.name)} (${cat.count})</div>
+                <div class="category-name">${escapeHTML(cat.name)} (${cat.count})</div>
             </a>
         </div>
     `).join('');
