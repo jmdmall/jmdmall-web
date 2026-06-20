@@ -26,18 +26,11 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', async function () {
-    // Initialize Location Engine
     initLocationEngine();
-
-    // Initialize GA4 if configured via meta properties
     initGA4FromMeta();
-
     await loadProducts();
-
     setupEventListeners();
-
     updateActiveNavLink();
-
     initSlideshow();
 });
 
@@ -55,25 +48,19 @@ function initLocationEngine() {
 
     const LOCAL_STORAGE_KEY = 'jmdmall_user_location';
 
-    // 1. Try to fetch from Local User Memory
     let savedLocation = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (savedLocation) {
         if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${savedLocation}`;
     } else {
-        // 2. Fallback to Auto-Detection via Browser Geolocation API
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     try {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        // Reverse geocode using openstreetmap public API
                         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
                         const data = await response.json();
-                        
-                        // Extract town, city, or neighborhood metrics safely
                         const detectedCity = data.address.city || data.address.town || data.address.village || data.address.state || "Nepal";
-                        
                         localStorage.setItem(LOCAL_STORAGE_KEY, detectedCity);
                         if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${detectedCity}`;
                     } catch (err) {
@@ -91,11 +78,9 @@ function initLocationEngine() {
         if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: Nepal`;
     }
 
-    // 3. Modal Overlay Window Event Listeners Hooks
     if (editLocationBtn && locationModal) {
         editLocationBtn.addEventListener('click', () => {
             if (manualLocationInput) {
-                // Pre-fill input block text with current layout data
                 const currentText = locationDisplay.textContent.replace('DELIVERING AT: ', '');
                 manualLocationInput.value = currentText === 'Detecting your delivery area...' ? '' : currentText;
             }
@@ -104,9 +89,7 @@ function initLocationEngine() {
     }
 
     if (closeLocationModal && locationModal) {
-        closeLocationModal.addEventListener('click', () => {
-            locationModal.style.display = 'none';
-        });
+        closeLocationModal.addEventListener('click', () => { locationModal.style.display = 'none'; });
     }
 
     if (saveLocationBtn && locationModal && manualLocationInput) {
@@ -120,11 +103,8 @@ function initLocationEngine() {
         });
     }
 
-    // Close window option if backdrop is clicked directly
     window.addEventListener('click', (e) => {
-        if (e.target === locationModal) {
-            locationModal.style.display = 'none';
-        }
+        if (e.target === locationModal) { locationModal.style.display = 'none'; }
     });
 }
 
@@ -144,7 +124,7 @@ async function getProductsCached(){
         if (!res.ok) throw new Error('CSV file not found');
         const text = await res.text();
         const parsed = parseCSV(text);
-        try { sessionStorage.setItem(key, JSON.stringify(parsed)); } catch(e) { /* Ignore cache block limits */ }
+        try { sessionStorage.setItem(key, JSON.stringify(parsed)); } catch(e) { }
         return parsed;
     } catch(e) {
         console.error('getProductsCached error:', e);
@@ -157,7 +137,6 @@ function initGA4FromMeta(){
         const meta = document.querySelector('meta[name="ga-id"]');
         const id = (meta && meta.content) || window.GA_MEASUREMENT_ID;
         if (!id) return;
-        
         if (!window.gtag) {
             const s1 = document.createElement('script');
             s1.async = true;
@@ -167,21 +146,19 @@ function initGA4FromMeta(){
             window.gtag = function(){ window.dataLayer.push(arguments); };
             window.gtag('js', new Date());
             window.gtag('config', id, { 'send_page_view': false });
-            console.log('GA4 initialized:', id);
         }
     } catch(e) { console.warn('initGA4 error:', e); }
 }
 
 function trackEvent(name, data = {}){
     const payload = { event: name, ...data };
-    try { console.log('analytics_payload', payload); } catch(e){}
     try { if (window.dataLayer) window.dataLayer.push(payload); } catch(e){}
     try {
         if (window.gtag) {
             const gaName = String(name).replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
             window.gtag('event', gaName, data);
         }
-    } catch(e) { console.warn('gtag tracking failed', e); }
+    } catch(e) { }
 }
 
 // ==========================================================================
@@ -195,7 +172,6 @@ async function loadProducts() {
         allProducts = await getProductsCached();
         filteredProducts = [...allProducts];
 
-        // Check if loading home index page layout
         if (document.getElementById('categoriesGrid')) {
             renderCategories(allProducts);
             const featured = filteredProducts.slice(0, 12);
@@ -204,7 +180,7 @@ async function loadProducts() {
             if (viewAllWrapper) {
                 viewAllWrapper.style.display = 'block';
                 const viewAllLink = document.getElementById('viewAllLink');
-                if (viewAllLink) viewAllLink.href = '#'; 
+                if (viewAllLink) viewAllLink.href = 'all-products.html'; 
             }
             trackEvent('page_load', { page: 'index', initialProducts: featured.length });
         } else {
@@ -297,14 +273,8 @@ function getDiscountPercent(mrp, sellingPrice) {
     return Math.round(((mrp - sellingPrice) / mrp) * 100);
 }
 
-function getFinalPrice(product) {
-    const selling = Number(product.selling_price || 0);
-    const discount = Number(product.discount_amount || 0);
-    return Math.max(selling - discount, 0);
-}
-
 // ==========================================================================
-// CATEGORY HELPERS WITH IN-PAGE DIRECT FILTERING
+// CATEGORIES RENDERING (Restored Links & Images)
 // ==========================================================================
 
 function getUniqueCategoriesWithCount(productsArray){
@@ -323,18 +293,21 @@ function renderCategories(productsArray){
     if (!container) return;
     const cats = getUniqueCategoriesWithCount(productsArray);
     
-    // Wrapped back inside an anchor tag to cleanly navigate to category.html
+    // Restored category image rendering and link navigation pathing to category.html
     container.innerHTML = cats.map(cat => `
         <div class="category-tile" data-category="${escapeHTML(cat.name)}">
             <a href="category.html?cat=${encodeURIComponent(cat.name)}" style="text-decoration:none;color:inherit;width:100%;display:block;">
-                <h3>${escapeHTML(cat.name)} (${cat.count})</h3>
+                <div class="category-image" style="width: 100%; height: 120px; background-color: var(--bg-gray); overflow:hidden; border-radius:6px; margin-bottom:8px;">
+                    <img src="${cat.sampleImage}" loading="lazy" alt="${escapeHTML(cat.name)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='images/placeholder.svg'">
+                </div>
+                <div class="category-name" style="font-weight:600; font-size:0.95rem; color:var(--text-dark);">${escapeHTML(cat.name)} (${cat.count})</div>
             </a>
         </div>
     `).join('');
 }
 
 // ==========================================================================
-// FLIPKART-STYLE COMPACT PRODUCT CARD COMPONENTS
+// HOMEPAGE CARD RENDERING (Restored Product Details Link Redirection)
 // ==========================================================================
 
 function renderProducts(productsArray) {
@@ -346,14 +319,12 @@ function renderProducts(productsArray) {
     }
 
     productsGrid.innerHTML = productsArray.map(createProductCard).join('');
-
     requestAnimationFrame(() => { window.observeLazyImages && window.observeLazyImages(); });
 }
 
 function createProductCard(product) {
     const discountPercent = getDiscountPercent(product.mrp, product.selling_price);
     const flatDiscountAmount = Math.round(Number(product.mrp || 0) - Number(product.selling_price || 0));
-
     const shortDesc = product.short_description || (product.description || '').split('\n')[0] || '';
 
     const flatDiscountBadge = flatDiscountAmount > 0
@@ -363,31 +334,30 @@ function createProductCard(product) {
     const mockRating = product.rating || (4.0 + (Number(product.id || 0) % 10) * 0.1).toFixed(1);
     const mockReviewsCount = product.reviews || (45 + (Number(product.id || 0) * 12));
     const imageRatingBadge = `<div class="image-rating-badge">⭐ ${mockRating} <span class="rating-count">(${formatCount(mockReviewsCount)})</span></div>`;
-
     const imgSrc = product.image || 'images/placeholder.svg';
-    const msg = encodeURIComponent(`Hello JMD Mall, I want to order:\n\n*Product:* ${product.name}\n*Price:* Rs. ${Number(product.selling_price).toLocaleString('en-IN')}`);
 
+    // Cards point natively back to product.html layout redirection without direct WhatsApp buttons
     return `
     <div class="product-card" data-product-id="${escapeHTML(product.id)}" data-product-name="${escapeHTML(product.name)}">
-        <div class="product-image-wrapper">
-            <img class="product-image" src="${imgSrc}" alt="${escapeHTML(product.name)}" loading="lazy" onerror="this.src='images/placeholder.svg'">
-            ${flatDiscountBadge}
-            ${imageRatingBadge}
-        </div>
-
-        <div class="product-info compact">
-            <span class="product-brand" style="font-size: 0.75rem; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 2px;">${escapeHTML(product.brand || 'JMD')}</span>
-            <h4 class="grid-product-name">${escapeHTML(product.name)}</h4>
-            <p class="grid-product-desc">${escapeHTML(shortDesc)}</p>
-
-            <div class="price-row-grid">
-                <span class="selling-price">Rs. ${formatPrice(product.selling_price)}</span>
-                <span class="mrp-price">Rs. ${formatPrice(product.mrp)}</span>
-                ${discountPercent > 0 ? `<span class="discount-percent">${discountPercent}% OFF</span>` : ''}
+        <a href="product.html?id=${product.id}" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; height:100%;">
+            <div class="product-image-wrapper">
+                <img class="product-image" src="${imgSrc}" alt="${escapeHTML(product.name)}" loading="lazy" onerror="this.src='images/placeholder.svg'">
+                ${flatDiscountBadge}
+                ${imageRatingBadge}
             </div>
-            
-            <a href="https://wa.me/9779705446407?text=${msg}" target="_blank" class="buy-now-btn" style="margin-top: auto; text-decoration: none;">💬 Order via WhatsApp</a>
-        </div>
+
+            <div class="product-info compact">
+                <span class="product-brand" style="font-size: 0.75rem; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 2px;">${escapeHTML(product.brand || 'JMD')}</span>
+                <h4 class="grid-product-name">${escapeHTML(product.name)}</h4>
+                <p class="grid-product-desc">${escapeHTML(shortDesc)}</p>
+
+                <div class="price-row-grid" style="margin-top:auto;">
+                    <span class="selling-price">Rs. ${formatPrice(product.selling_price)}</span>
+                    <span class="mrp-price">Rs. ${formatPrice(product.mrp)}</span>
+                    ${discountPercent > 0 ? `<span class="discount-percent">${discountPercent}% OFF</span>` : ''}
+                </div>
+            </div>
+        </a>
     </div>
     `;
 }
@@ -448,17 +418,16 @@ function setupEventListeners() {
             productsGrid.addEventListener('click', function(e){
                 const card = e.target.closest('.product-card');
                 if (!card) return;
-                
                 const pid = card.dataset.productId;
                 const pname = card.dataset.productName;
                 trackEvent('product_click', { product_id: pid || '', product_name: pname || '' });
             });
         }
-    } catch(e) { console.warn('Analytics event drop tracking logs:', e); }
+    } catch(e) { }
 }
 
 // ==========================================================================
-// STRING SANITIZATION AND ALPHANUMERIC FORMATTERS HELPERS
+// UTILITIES & DECORATORS HELPERS
 // ==========================================================================
 
 function formatPrice(price) { return Number(price || 0).toLocaleString('en-IN'); }
@@ -480,7 +449,7 @@ function updateActiveNavLink() {
 }
 
 // ==========================================================================
-// AUTO SLIDESHOW COMPONENT ENGINE
+// AUTO SLIDESHOW ENGINE
 // ==========================================================================
 
 function initSlideshow() {
