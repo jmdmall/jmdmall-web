@@ -62,20 +62,35 @@
         </div>
     </div>
 
-    <nav class="navbar">
+   <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <a href="index.html">JMD Mall</a>
+
+            <div class="nav-brand-wrapper">
+                <a href="index.html" style="display: block; border: none; text-decoration: none;">
+                    <img src="images/logo.png" alt="JMD Mall Logo" class="nav-logo-img" onerror="this.style.display='none'">
+                </a>
+                <span class="nav-logo-subtext">jmdmall.com</span>
             </div>
-            <div class="search-bar" style="visibility: hidden; pointer-events: none;">
-                <input type="text" placeholder="Search products..." class="search-input">
-                <button class="search-btn">🔍</button>
+
+            <div class="nav-center-contacts">
+                <a href="tel:+9779705446407" class="header-contact-link">📞 Call</a>
+                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="header-contact-link" style="color: #25D366;">💬 WhatsApp</a>
+                <a href="mailto:info@jmdmall.com" class="header-contact-link">✉️ info@jmdmall.com</a>
             </div>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link active">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
+
+            <div class="nav-right-actions">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search quality products..." class="search-input">
+                    <button class="search-btn" id="searchBtn">🔍</button>
+                </div>
+                
+                <div class="header-menu-links">
+                    <a href="index.html" class="header-menu-link active">Home</a>
+                    <a href="about.html" class="header-menu-link">About</a>
+                    <a href="contact.html" class="header-menu-link">Contact</a>
+                </div>
             </div>
+
         </div>
     </nav>
 
