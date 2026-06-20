@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 // ==========================================================================
-// LOCATION MANAGEMENT ENGINE
+// LOCATION MANAGEMENT ENGINE (Autocompleting, Restricting to Nepal)
 // ==========================================================================
 
 function initLocationEngine() {
@@ -46,13 +46,31 @@ function initLocationEngine() {
     const closeLocationModal = document.getElementById('closeLocationModal');
     const saveLocationBtn = document.getElementById('saveLocationBtn');
     const manualLocationInput = document.getElementById('manualLocationInput');
+    const modalDetectBtn = document.getElementById('modalDetectBtn');
+    const autocompleteResults = document.getElementById('autocompleteResults');
+    const locationErrorMsg = document.getElementById('locationErrorMsg');
 
     const LOCAL_STORAGE_KEY = 'jmdmall_user_location';
+    let selectedLocationName = ""; 
+    let debounceTimer;
 
+    // Load saved data on launch if present
     let savedLocation = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (savedLocation) {
         if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${savedLocation}`;
     } else {
+        fallbackLocation();
+    }
+
+    function fallbackLocation() {
+        if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: Nepal`;
+    }
+
+    // NATIVE GPS RUNTIME LOOKUP FUNCTION
+    async function performGPSDetection() {
+        if (locationErrorMsg) locationErrorMsg.style.display = 'none';
+        if (locationDisplay) locationDisplay.textContent = "📍 Detecting coordinates...";
+        
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -61,9 +79,18 @@ function initLocationEngine() {
                         const lon = position.coords.longitude;
                         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
                         const data = await response.json();
+                        
+                        const country = data.address.country || "";
                         const detectedCity = data.address.city || data.address.town || data.address.village || data.address.state || "Nepal";
-                        localStorage.setItem(LOCAL_STORAGE_KEY, detectedCity);
-                        if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${detectedCity}`;
+
+                        // Verify Country Bounds
+                        if (country.toLowerCase() === "nepal") {
+                            localStorage.setItem(LOCAL_STORAGE_KEY, detectedCity);
+                            if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${detectedCity}`;
+                            if (locationModal) locationModal.style.display = 'none';
+                        } else {
+                            handleOutsideNepalError();
+                        }
                     } catch (err) {
                         fallbackLocation();
                     }
@@ -75,37 +102,122 @@ function initLocationEngine() {
         }
     }
 
-    function fallbackLocation() {
-        if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: Nepal`;
+    function handleOutsideNepalError() {
+        fallbackLocation();
+        if (locationErrorMsg) {
+            locationErrorMsg.textContent = "❌ We don't deliver to your location. We are serving only Nepal.";
+            locationErrorMsg.style.display = 'block';
+        }
     }
 
+    // AUTOCOMPLETE LOOKUP TRIGGER
+    if (manualLocationInput) {
+        manualLocationInput.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            const query = manualLocationInput.value.trim();
+            
+            // Lock save button since they modified the text line manually
+            if (saveLocationBtn) {
+                saveLocationBtn.disabled = true;
+                saveLocationBtn.style.opacity = "0.5";
+                saveLocationBtn.style.cursor = "not-allowed";
+            }
+            if (locationErrorMsg) locationErrorMsg.style.display = 'none';
+
+            if (query.length < 3) {
+                if (autocompleteResults) autocompleteResults.style.display = 'none';
+                return;
+            }
+
+            // Debounce API calls to prevent flooding the server
+            debounceTimer = setTimeout(async () => {
+                try {
+                    // Query Limited to Nepal bounds using viewbox parameters via Nominatim
+                    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=np&addressdetails=1&limit=5`);
+                    const results = await res.json();
+
+                    if (results && results.length > 0) {
+                        if (autocompleteResults) {
+                            autocompleteResults.innerHTML = results.map(item => {
+                                const cleanName = item.display_name.split(',').slice(0, 3).join(',');
+                                return `<div class="autocomplete-item" data-full-name="${escapeHTML(cleanName)}" data-country="${escapeHTML(item.address.country)}">${escapeHTML(cleanName)}</div>`;
+                            }).join('');
+                            autocompleteResults.style.display = 'block';
+                        }
+                    } else {
+                        if (autocompleteResults) autocompleteResults.style.display = 'none';
+                    }
+                } catch (e) {
+                    console.error("Autocomplete fetch drop:", e);
+                }
+            }, 350);
+        });
+    }
+
+    // SELECTION HOOK (Forces user to choose from list only)
+    if (autocompleteResults) {
+        autocompleteResults.addEventListener('click', function(e) {
+            const clickedItem = e.target.closest('.autocomplete-item');
+            if (!clickedItem) return;
+
+            const country = clickedItem.dataset.country || "";
+            selectedLocationName = clickedItem.dataset.fullName;
+
+            if (manualLocationInput) manualLocationInput.value = selectedLocationName;
+            autocompleteResults.style.display = 'none';
+
+            // Validate that country is Nepal
+            if (country.toLowerCase() === "nepal") {
+                if (saveLocationBtn) {
+                    saveLocationBtn.disabled = false;
+                    saveLocationBtn.style.opacity = "1";
+                    saveLocationBtn.style.cursor = "pointer";
+                }
+                if (locationErrorMsg) locationErrorMsg.style.display = 'none';
+            } else {
+                handleOutsideNepalError();
+            }
+        });
+    }
+
+    // MODAL BUTTON TRIGGERS
     if (editLocationBtn && locationModal) {
         editLocationBtn.addEventListener('click', () => {
-            if (manualLocationInput) {
-                const currentText = locationDisplay.textContent.replace('DELIVERING AT: ', '');
-                manualLocationInput.value = currentText === 'Detecting your delivery area...' ? '' : currentText;
+            if (manualLocationInput) manualLocationInput.value = '';
+            if (autocompleteResults) autocompleteResults.style.display = 'none';
+            if (locationErrorMsg) locationErrorMsg.style.display = 'none';
+            if (saveLocationBtn) {
+                saveLocationBtn.disabled = true;
+                saveLocationBtn.style.opacity = "0.5";
+                saveLocationBtn.style.cursor = "not-allowed";
             }
             locationModal.style.display = 'flex';
         });
     }
 
+    if (modalDetectBtn) modalDetectBtn.addEventListener('click', performGPSDetection);
     if (closeLocationModal && locationModal) {
         closeLocationModal.addEventListener('click', () => { locationModal.style.display = 'none'; });
     }
 
-    if (saveLocationBtn && locationModal && manualLocationInput) {
+    if (saveLocationBtn && locationModal) {
         saveLocationBtn.addEventListener('click', () => {
-            const userText = manualLocationInput.value.trim();
-            if (userText) {
-                localStorage.setItem(LOCAL_STORAGE_KEY, userText);
-                if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${userText}`;
+            if (selectedLocationName) {
+                localStorage.setItem(LOCAL_STORAGE_KEY, selectedLocationName);
+                if (locationDisplay) locationDisplay.textContent = `DELIVERING AT: ${selectedLocationName}`;
                 locationModal.style.display = 'none';
             }
         });
     }
 
-    window.addEventListener('click', (e) => {
-        if (e.target === locationModal) { locationModal.style.display = 'none'; }
+    // Close autocomplete lists if clicking outside modal elements
+    document.addEventListener('click', (e) => {
+        if (autocompleteResults && e.target !== manualLocationInput) {
+            autocompleteResults.style.display = 'none';
+        }
+        if (e.target === locationModal) {
+            locationModal.style.display = 'none';
+        }
     });
 }
 

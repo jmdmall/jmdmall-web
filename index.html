@@ -135,14 +135,27 @@
         </div>
     </main>
 
-    <div class="location-modal" id="locationModal">
+   <div class="location-modal" id="locationModal">
         <div class="location-modal-content">
             <h3>Enter Delivery Location</h3>
-            <p>Type your city or neighborhood to manually update your delivery area:</p>
-            <input type="text" id="manualLocationInput" placeholder="e.g., Kathmandu, New Delhi, Lalitpur...">
+            <p>Search your city or neighborhood in Nepal:</p>
+            
+            <button class="modal-btn save" id="modalDetectBtn" style="width:100%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                📍 Detect My Location
+            </button>
+
+            <div style="border-top: 1px solid var(--border-color); margin-bottom: 1rem; padding-top: 1rem; text-align: center; font-size: 0.85rem; color: var(--text-light);">OR SEARCH MANUALLY</div>
+
+            <div class="autocomplete-wrapper" style="position: relative; margin-bottom: 1.5rem;">
+                <input type="text" id="manualLocationInput" placeholder="Type your town or city..." autocomplete="off" style="margin-bottom: 0;">
+                <div id="autocompleteResults" class="autocomplete-results" style="position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid var(--border-color); border-top: none; max-height: 200px; overflow-y: auto; z-index: 3000; display: none; box-shadow: var(--shadow-medium); border-radius: 0 0 4px 4px;"></div>
+            </div>
+
+            <div id="locationErrorMsg" style="color: #e63946; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem; text-align: center; display: none;"></div>
+
             <div class="location-modal-actions">
                 <button class="modal-btn cancel" id="closeLocationModal">Cancel</button>
-                <button class="modal-btn save" id="saveLocationBtn">Save Location</button>
+                <button class="modal-btn save" id="saveLocationBtn" disabled style="opacity: 0.5; cursor: not-allowed;">Save Location</button>
             </div>
         </div>
     </div>
