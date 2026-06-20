@@ -3,19 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About JMD Mall - Online Marketplace</title>
+    <title>About Us - JMD Mall</title>
+    <meta name="ga-id" content="G-SX4MCKDF7F">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/grid.css">
+    <style>
+        /* Multi-language Tab Switching Logic (No JS needed) */
+        .lang-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .lang-btn {
+            padding: 0.6rem 1.5rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        /* State Controller Inputs */
+        #toggleEn:checked ~ .lang-tabs label[for="toggleEn"],
+        #toggleNp:checked ~ .lang-tabs label[for="toggleNp"] {
+            background-color: var(--secondary-color);
+            color: #fff;
+            border-color: var(--secondary-color);
+        }
+
+        .lang-content-en, .lang-content-np { display: none; }
+        #toggleEn:checked ~ .about-split-grid .lang-content-en { display: block; }
+        #toggleNp:checked ~ .about-split-grid .lang-content-np { display: block; }
+
+        @media (min-width: 768px) {
+            .about-split-grid {
+                display: grid;
+                grid-template-columns: 1.6fr 1fr;
+                gap: 2.5rem;
+                align-items: start;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+
+    <div class="top-contact-bar">
+        <div class="top-contact-container">
+            <a class="top-contact-link" id="topPhone" href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank">📱 +977 9705446407</a>
+            <a class="top-contact-link" id="topEmail" href="mailto:info@jmdmall.com">✉️ info@jmdmall.com</a>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
                 <a href="index.html">JMD Mall</a>
             </div>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search products..." class="search-input">
-                <button class="search-btn" id="searchBtn">🔍</button>
+            <div class="search-bar" style="visibility: hidden; pointer-events: none;">
+                <input type="text" placeholder="Search products..." class="search-input">
+                <button class="search-btn">🔍</button>
             </div>
             <div class="nav-links">
                 <a href="index.html" class="nav-link">Home</a>
@@ -25,90 +74,186 @@
         </div>
     </nav>
 
-    <!-- About Content -->
-    <main class="about-container">
-        <section class="about-hero">
-            <h1>About JMD Mall</h1>
-            <p>Your trusted online marketplace for quality products</p>
-        </section>
+    <main class="about-container" style="margin-top: 2rem; margin-bottom: 4rem;">
+        
+        <input type="radio" id="toggleEn" name="langToggle" checked style="display: none;">
+        <input type="radio" id="toggleNp" name="langToggle" style="display: none;">
 
-        <section class="about-content">
-            <div class="about-section">
-                <h2>Who We Are</h2>
-                <p>
-                    JMD Mall is a modern online marketplace dedicated to bringing you the best products 
-                    at unbeatable prices. We partner with trusted sellers and brands to offer a wide 
-                    variety of products ranging from electronics to accessories.
+        <div class="about-hero" style="padding: 1rem 0; text-align: center; margin-bottom: 1rem;">
+            <h1>JMD Mall</h1>
+        </div>
+
+        <div class="lang-tabs">
+            <label for="toggleEn" class="lang-btn">English</label>
+            <label for="toggleNp" class="lang-btn">नेपाली (Nepali)</label>
+        </div>
+
+        <div class="about-content">
+            <div class="about-split-grid">
+                
+                <div class="story-text-wrapper">
+                    
+                    <div class="lang-content-en">
+                        <div class="about-section" style="background-color: var(--bg-gray); padding: 2rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h2 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 1rem;">The Motivation Behind Our Startup</h2>
+                            <p style="margin-bottom: 1rem;">
+                                JMD Mall is deeply thankful to 6-year-old <strong>Jason</strong>, who is the real motivation and inspiration behind this startup platform.
+                            </p>
+                            <p style="margin-bottom: 1rem;">
+                                Everything featured on this website comes from a simple philosophy: <em>I only share what I use myself in my day-to-day life.</em> I never overpay for products or services. One day, I thought, why shouldn't everyone who knows me also pay less?
+                            </p>
+                            <p style="margin-bottom: 1rem;">
+                                The real spark happened when my son asked me, <em>"Papa, how much did you buy this Camlin Geometry Box for? The MRP is more than Rs. 100."</em> I smiled and told him, <em>"Just 50 Rupees."</em> 
+                            </p>
+                            <p>
+                                Excited, Jason went to school and shared this with his entire class. The next day, he came back home and asked me to buy it for all his classmates. That chain of events set everything in motion. Today, we source quality products and services directly on behalf of you.
+                            </p>
+                        </div>
+
+                        <div class="about-section" style="background-color: var(--bg-gray); padding: 2rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h2 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 1rem;">Not an Ordinary E-Commerce Store</h2>
+                            <p style="margin-bottom: 1rem;">
+                                We want to make one thing clear: <strong>JMD Mall is not an online shop or traditional e-commerce platform.</strong> This is simply a service where we buy products or services directly on your behalf.
+                            </p>
+                            <p>
+                                In this setup, I have no commission or corporate earnings. Our mission is pure community assistance—bringing collective buying leverage straight to you.
+                            </p>
+                        </div>
+
+                        <div class="about-section" style="background-color: var(--bg-gray); padding: 2rem; border-radius: 8px;">
+                            <h2 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 1rem;">7 Years in the Making</h2>
+                            <p style="margin-bottom: 1rem;">
+                                I actually started this business 7 years ago, scaling up to over 5,000 followers on Facebook. However, due to the unexpected lockdowns, I had to stop in between. Back then, I was a bachelor—operating in a very small quantity, without the beautiful inspiration of a wife and kids like I am blessed with now.
+                            </p>
+                            <p>
+                                Now, I want to leverage this a little and help everyone around us. If you want to know more about me, my values, or how we run things, please reach out!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="lang-content-np">
+                        <div class="about-section" style="background-color: var(--bg-gray); padding: 2rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h2 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 1rem;">हाम्रो स्टार्टअप पछाडिको प्रेरणा</h2>
+                            <p style="margin-bottom: 1rem;">
+                                जेएमडी मल (JMD Mall) ६ वर्षका साना बाबु <strong>जेसन (Jason)</strong> प्रति हृदयदेखि नै आभारी छ, जो हाम्रो यस स्टार्टअपका वास्तविक प्रेरणा र उर्जा हुन्।
+                            </p>
+                            <p style="margin-bottom: 1rem;">
+                                यस वेबसाइटमा राखिएका सम्पूर्ण सामानहरू एउटा सरल सिद्धान्तमा आधारित छन्: <em>"जे म आफ्नो दैनिक जीवनमा आफैं प्रयोग गर्छु, त्यही मात्र यहाँ राख्छु।"</em> म कुनै पनि सामान वा सेवाका लागि कहिल्यै बढी मूल्य तिर्दिनँ। त्यसैले मैले सोचेँ—किन मलाई चिन्ने र मन पराउने अरू मानिसहरूले पनि कम मूल्यमा गुणस्तरीय सामान नपाउने?
+                            </p>
+                            <p style="margin-bottom: 1rem;">
+                                यसको वास्तविक सुरुवात तब भयो, जब एकदिन मेरो छोराले मलाई सोध्यो, <em>"बाबा, तपाईंले मेरो लागि यो क्यामलिन जिओमेट्री बक्स (Camlin Geometry Box) कतिमा किन्नुभयो? यसको बजार मूल्य (MRP) त १०० रुपैयाँभन्दा बढी छ।"</em> मैले हाँस्दै भनेँ, <em>"मात्र ५० रुपैयाँमा।"</em>
+                            </p>
+                            <p style="margin-bottom: 1rem;">
+                                यो सुनेर दङ्ग पर्दै जेसनले भोलिपल्ट स्कूल गएर आफ्नो कक्षाका सबै साथीहरूलाई यो कुरा सुनाएछ। त्यसको अर्को दिन उसले मलाई कक्षाका सबै साथीहरूका लागि त्यो जिओमेट्री बक्स किनिदिन भन्यो। त्यही घटनाले नै हाम्रो सोच परिवर्तन गरिदियो। आज हामी तपाईंहरू सबैको तर्फबाट सिधै गुणस्तरीय सामान र सेवाहरू सस्तोमा खरिद गर्छौं।
+                            </p>
+                        </div>
+
+                        <div class="about-section" style="background-color: var(--bg-gray); padding: 2rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h2 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 1rem;">यो कुनै साधारण ई-कमर्स स्टोर होइन</h2>
+                            <p style="margin-bottom: 1rem;">
+                                हामी एउटा कुरा स्पष्ट पार्न चाहन्छौं: <strong>जेएमडी मल कुनै व्यापारिक अनलाइन पसल वा परम्परागत ई-कमर्स प्लेटफर्म होइन।</strong> यो केवल एउका माध्यम हो, जहाँ हामी तपाईंको तर्फबाट उद्योग र थोक बजारबाट सिधै सामान वा सेवाहरू खरिद गर्छौं।
+                            </p>
+                            <p>
+                                यस कार्यमा मेरो कुनै व्यक्तिगत कमिसन वा नाफा कमाउने उद्देश्य छैन। हाम्रो एकमात्र उद्देश्य भनेको सबैलाई सुपथ मूल्यमा सामान उपलब्ध गराएर सहयोग गर्नु हो।
+                            </p>
+                        </div>
+
+                        <div class="about-section" style="background-color: var(--bg-gray); padding: 2rem; border-radius: 8px;">
+                            <h2 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 1rem;">७ वर्ष अघिको इतिहास</h2>
+                            <p style="margin-bottom: 1rem;">
+                                मैले वास्तवमा यो व्यवसाय ७ वर्ष पहिले नै सुरु गरेको थिएँ, र फेसबुकमा ५,००० भन्दा बढी फलोअर्स पनि जोडिनुभएको थियो। तर बीचमा लकडाउनका कारण मैले यसलाई निरन्तरता दिन सकिनँ। त्यतिबेला म अविवाहित थिएँ—धेरै सानो परिमाणमा काम गर्थें र मसँग अहिलेको जस्तो श्रीमती र छोराछोरीको बलियो प्रेरणा र साथ थिएन।
+                            </p>
+                            <p>
+                                तर अहिले म यसलाई अझ व्यवस्थित बनाएर समाजका सबैलाई मद्दत गर्न चाहन्छु। यदि तपाईं म र मेरो यस अभियानको बारेमा थप जान्न चाहनुहुन्छ भने, कृपया निःसंकोच सम्पर्क गर्नुहोला!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-sidebar-card" style="background-color: var(--bg-gray); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; text-align: center; position: sticky; top: 90px;">
+                    <div class="profile-image-container" style="width: 100%; max-width: 260px; margin: 0 auto 1.2rem auto; border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-light);">
+                        <img src="images/jasonstand.png" alt="Jason - Inspiration behind JMD Mall" style="width: 100%; height: auto; display: block;">
+                    </div>
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.2rem;">Jason</h3>
+                    <p style="font-size: 0.85rem; text-transform: uppercase; color: var(--primary-color); font-weight: 700; margin-bottom: 1rem;">Chief Inspiration Officer</p>
+                    
+                    <div class="lang-content-en">
+                        <p style="font-size: 0.9rem; text-align: left; color: var(--text-dark); line-height: 1.5; margin-bottom: 0.8rem;">
+                            Currently studying in <strong>Class 1</strong>, Jason helped mastermind these HTML web pages with the help of AI! He proves that AI is so easy that a Class 1 student with basic English skills can achieve a website.
+                        </p>
+                        <p style="font-size: 0.9rem; text-align: left; color: var(--text-dark); line-height: 1.5; margin-bottom: 0.8rem;">
+                            Apart from his studies, he loves helping his father build this platform. 
+                        </p>
+                        <p style="font-size: 0.9rem; text-align: left; color: var(--text-dark); line-height: 1.5;">
+                            His hobbies include playing games on mobile (like <em>Scary Teacher</em>), learning new things, and he is a massive fan of ChatGPT!
+                        </p>
+                    </div>
+
+                    <div class="lang-content-np">
+                        <p style="font-size: 0.9rem; text-align: left; color: var(--text-dark); line-height: 1.5; margin-bottom: 0.8rem;">
+                            हाल <strong>कक्षा १</strong> मा अध्ययनरत जेसनले एआई (AI) को सहयोगमा यी एचटीएमएल (HTML) वेब पेजहरू तयार पार्न ठूलो सहयोग गरेका छन्! उनले प्रमाणित गरिदिएका छन् कि यदि अंग्रेजीको सामान्य ज्ञान छ भने एआईको प्रयोग गरेर कक्षा १ मा पढ्ने विद्यार्थीले पनि सजिलै वेबसाइट बनाउन सक्छन्।
+                        </p>
+                        <p style="font-size: 0.9rem; text-align: left; color: var(--text-dark); line-height: 1.5; margin-bottom: 0.8rem;">
+                            आफ्नो पढाइका अतिरिक्त उनी आफ्नो बुबालाई यो प्लेटफर्म निर्माण गर्न सघाउन निकै मन पराउँछन्।
+                        </p>
+                        <p style="font-size: 0.9rem; text-align: left; color: var(--text-dark); line-height: 1.5;">
+                            उनको रुचि मोबाइलमा गेमहरू खेल्ने (जस्तै <em>Scary Teacher</em>), नयाँ कुराहरू सिक्ने हो र उनी च्याटजीपीटी (ChatGPT) का ठूला फ्यान हुन्!
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <section class="cta-section" style="margin-top: 4rem; text-align: center; background: linear-gradient(135deg, #146EB4 0%, #0f4a7a 100%); padding: 3rem 1.5rem; border-radius: 8px; color: #fff;">
+            
+            <div class="lang-content-en">
+                <h2 style="color: #fff; margin-bottom: 1rem;">Let's Have a Coffee!</h2>
+                <p style="max-width: 600px; margin: 0 auto 2rem auto; font-size: 1.1rem; color: rgba(255,255,255,0.9);">
+                    WhatsApp me, call me, or let's sit down for a chat. Whenever you are traveling or around in <strong>Raxaul</strong>, please come meet me!
                 </p>
             </div>
 
-            <div class="about-section">
-                <h2>Our Mission</h2>
-                <p>
-                    Our mission is to make online shopping convenient, affordable, and accessible to everyone. 
-                    We believe in providing excellent customer service and ensuring every transaction is smooth 
-                    and secure. We're committed to offering products that meet the highest quality standards.
+            <div class="lang-content-np">
+                <h2 style="color: #fff; margin-bottom: 1rem;">सँगै कफी पिऔं न त!</h2>
+                <p style="max-width: 600px; margin: 0 auto 2rem auto; font-size: 1.1rem; color: rgba(255,255,255,0.9);">
+                    मलाई ह्वाट्सएप गर्नुहोस, कल गर्नुहोस वा सँगै बसेर कुराकानी गरौँ। तपाईं कहिले पनि <strong>रक्सौल (Raxaul)</strong> आसपास आउनुहुँदा मलाई पक्कै भेट्नुहोला!
                 </p>
             </div>
 
-            <div class="about-section">
-                <h2>Why Choose Us?</h2>
-                <ul class="about-list">
-                    <li>✓ Wide selection of quality products</li>
-                    <li>✓ Competitive prices with regular deals</li>
-                    <li>✓ Fast and reliable WhatsApp ordering</li>
-                    <li>✓ Secure transactions</li>
-                    <li>✓ Excellent customer support</li>
-                    <li>✓ Easy returns and refund policy</li>
-                </ul>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="cta-btn" style="background-color: var(--primary-color); padding: 0.8rem 2rem; border-radius: 4px; font-weight: 600; color:#fff; text-decoration:none;">💬 WhatsApp Me</a>
+                <a href="tel:+9779705446407" class="cta-btn" style="background-color: #fff; padding: 0.8rem 2rem; border-radius: 4px; font-weight: 600; color: var(--secondary-color); text-decoration:none; border: 1px solid #fff;">📞 Call Directly</a>
             </div>
-
-            <div class="about-section">
-                <h2>How to Order?</h2>
-                <p>Ordering from JMD Mall is simple:</p>
-                <ol class="about-list">
-                    <li>Browse our products on this website</li>
-                    <li>Click "Buy on WhatsApp" on the product</li>
-                    <li>Chat with us about your order</li>
-                    <li>Confirm and arrange payment</li>
-                    <li>Receive your products at your doorstep</li>
-                </ol>
-            </div>
-        </section>
-
-        <section class="cta-section">
-            <h2>Ready to Start Shopping?</h2>
-            <p>Browse our amazing collection of products today!</p>
-            <a href="index.html" class="cta-btn">Shop Now</a>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-section">
                 <h4>About JMD Mall</h4>
-                <p>Your one-stop online marketplace for quality products at great prices.</p>
+                <p>Your trusted online marketplace offering quality products, competitive pricing and WhatsApp ordering.</p>
             </div>
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <ul>
+                    <li><a href="index.html">Products</a></li>
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="index.html">Products</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Connect With Us</h4>
-                <p>Order via WhatsApp: <strong>+977-9705446407</strong></p>
-                <p>Email: <strong>info@jmdmall.com</strong></p>
+                <h4>Customer Support</h4>
+                <p>WhatsApp: <strong><a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank">+977 9705446407</a></strong></p>
+                <p>Email: <strong><a href="mailto:info@jmdmall.com">info@jmdmall.com</a></strong></p>
+                <p>Delivery by: <strong>Jay Mata Di Enterprises</strong></p>
+                <p>✅ JMDMall Assured<br>🚚 Fast Delivery</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 JMD Mall. All rights reserved.</p>
+            <p>&copy; 2026 JMD Mall. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <script src="js/script.js"></script>
 </body>
 </html>
