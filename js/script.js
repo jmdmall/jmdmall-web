@@ -27,7 +27,8 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 
 document.addEventListener('DOMContentLoaded', async function () {
     initLocationEngine();
-    initPromoBannerEngine(); // Added Ad notice engine initialization trigger
+    initPromoBannerEngine();
+    initTravelServicesEngine(); // <-- ADD THIS CORE METHOD HERE
     initGA4FromMeta();
     await loadProducts();
     setupEventListeners();
@@ -637,4 +638,247 @@ function initPromoBannerEngine() {
         noticeModal.style.display = 'none';
         sessionStorage.setItem(SESSION_BANNER_KEY, 'true');
     }
+}
+
+// ==========================================================================
+// TRAVEL & SERVICES BOOKING ENGINE CONTROLLER (AUTOCAMPLETE & WHATSAPP)
+// ==========================================================================
+function initTravelServicesEngine() {
+    const tabsGrid = document.getElementById('servicesTabsGrid');
+    const fieldsContainer = document.getElementById('dynamicFieldsContainer');
+    const panelTitle = document.getElementById('bookingPanelTitle');
+    
+    if (!tabsGrid || !fieldsContainer) return;
+
+    let currentActiveService = 'flight';
+
+    // Field configuration templates map metrics cleanly matching premium apps UI UX
+    const layouts = {
+        flight: {
+            title: "✈️ Book Domestic & International Flights",
+            html: `
+                <div class="input-field-block">
+                    <label>From (Origin)</label>
+                    <input type="text" id="srvFrom" placeholder="Type city or airport..." autocomplete="off" required>
+                    <div id="srvFromList" class="autocomplete-results"></div>
+                </div>
+                <div class="input-field-block">
+                    <label>To (Destination)</label>
+                    <input type="text" id="srvTo" placeholder="Type destination city..." autocomplete="off" required>
+                    <div id="srvToList" class="autocomplete-results"></div>
+                </div>
+                <div class="input-field-block">
+                    <label>Departure Date</label>
+                    <input type="date" id="srvDate" required>
+                </div>
+                <div class="input-field-block">
+                    <label>Class & Passengers</label>
+                    <select id="srvDetails">
+                        <option>1 Adult, Economy</option>
+                        <option>2 Adults, Economy</option>
+                        <option>Family (2+2), Economy</option>
+                        <option>1 Adult, Business Class</option>
+                    </select>
+                </div>
+                <div class="input-field-block" style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <button type="submit" class="book-submit-btn" id="srvSubmitBtn">Proceed to Book via WhatsApp 🚀</button>
+                </div>
+            `
+        },
+        railway: {
+            title: "🚂 Book IRCTC & Nepal Railway Train Tickets",
+            html: `
+                <div class="input-field-block">
+                    <label>From Station</label>
+                    <input type="text" id="srvFrom" placeholder="Type boarding station..." autocomplete="off" required>
+                    <div id="srvFromList" class="autocomplete-results"></div>
+                </div>
+                <div class="input-field-block">
+                    <label>To Station</label>
+                    <input type="text" id="srvTo" placeholder="Type arrival station..." autocomplete="off" required>
+                    <div id="srvToList" class="autocomplete-results"></div>
+                </div>
+                <div class="input-field-block">
+                    <label>Journey Date</label>
+                    <input type="date" id="srvDate" required>
+                </div>
+                <div class="input-field-block">
+                    <label>Quota Class</label>
+                    <select id="srvDetails">
+                        <option>Sleeper Class (SL)</option>
+                        <option>AC 3 Tier (3A)</option>
+                        <option>AC 2 Tier (2A)</option>
+                        <option>General / Second Sitting</option>
+                    </select>
+                </div>
+                <div class="input-field-block" style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <button type="submit" class="book-submit-btn" id="srvSubmitBtn">Proceed to Book via WhatsApp 🚀</button>
+                </div>
+            `
+        },
+        hotel: {
+            title: "🏨 Premium Hotel & Resort Booking Rooms",
+            html: `
+                <div class="input-field-block" style="grid-column: span 2;">
+                    <label>Where / Destination City</label>
+                    <input type="text" id="srvTo" placeholder="Type city, locality or hotel name..." autocomplete="off" required>
+                    <div id="srvToList" class="autocomplete-results"></div>
+                </div>
+                <div class="input-field-block">
+                    <label>Check-In Date</label>
+                    <input type="date" id="srvDate" required>
+                </div>
+                <div class="input-field-block">
+                    <label>Guests & Rooms</label>
+                    <select id="srvDetails">
+                        <option>1 Room, 1 Adult</option>
+                        <option>1 Room, 2 Adults</option>
+                        <option>2 Rooms, 4 Adults</option>
+                    </select>
+                </div>
+                <div class="input-field-block" style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <button type="submit" class="book-submit-btn" id="srvSubmitBtn">Book Hotel via WhatsApp 🚀</button>
+                </div>
+            `
+        },
+        car: {
+            title: "🚗 Outstation Cab & Local Car Rental Booking",
+            html: `
+                <div class="input-field-block">
+                    <label>Pick-Up Location</label>
+                    <input type="text" id="srvFrom" placeholder="Type pick-up address..." autocomplete="off" required>
+                    <div id="srvFromList" class="autocomplete-results"></div>
+                </div>
+                <div class="input-field-block">
+                    <label>Drop Destination</label>
+                    <input type="text" id="srvTo" placeholder="Type drop-off address..." autocomplete="off" required>
+                    <div id="srvToList" class="autocomplete-results"></div>
+                </div>
+                <div class="input-field-block">
+                    <label>Travel Date</label>
+                    <input type="date" id="srvDate" required>
+                </div>
+                <div class="input-field-block">
+                    <label>Vehicle Choice</label>
+                    <select id="srvDetails">
+                        <option>Compact Hatchback (Swift/i20)</option>
+                        <option>Premium Sedan (Dzire/Etios)</option>
+                        <option>Suv / Scorpio / Ertiga</option>
+                    </select>
+                </div>
+                <div class="input-field-block" style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <button type="submit" class="book-submit-btn" id="srvSubmitBtn">Hire Car via WhatsApp 🚀</button>
+                </div>
+            `
+        }
+    };
+
+    function renderActiveForm(srvKey) {
+        currentActiveService = srvKey;
+        panelTitle.innerHTML = layouts[srvKey].title;
+        fieldsContainer.innerHTML = layouts[srvKey].html;
+
+        // Automatically configure date limits to prevent past choices
+        const dateInput = document.getElementById('srvDate');
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.min = today;
+            dateInput.value = today;
+        }
+
+        // Attach strict type-and-select autocomplete controllers
+        bindAutocompleteToField('srvFrom', 'srvFromList');
+        bindAutocompleteToField('srvTo', 'srvToList');
+    }
+
+    // Toggle click listeners across dashboard buttons grid
+    tabsGrid.addEventListener('click', (e) => {
+        const targetTab = e.target.closest('.service-tab-card');
+        if (!targetTab) return;
+
+        tabsGrid.querySelectorAll('.service-tab-card').forEach(c => c.classList.remove('active-tab'));
+        targetTab.classList.add('active-tab');
+        
+        renderActiveForm(targetTab.dataset.service);
+    });
+
+    // Handle form submissions: Packages parameters cleanly to WhatsApp API redirect parameters
+    document.getElementById('travelBookingForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const fromVal = document.getElementById('srvFrom') ? document.getElementById('srvFrom').value.trim() : "N/A";
+        const toVal = document.getElementById('srvTo') ? document.getElementById('srvTo').value.trim() : "N/A";
+        const dateVal = document.getElementById('srvDate') ? document.getElementById('srvDate').value : "N/A";
+        const detailsVal = document.getElementById('srvDetails') ? document.getElementById('srvDetails').value : "N/A";
+
+        let message = `*JMD MALL - NEW SERVICE BOOKING REQUEST*%0A`;
+        message += `==============================%0A`;
+        message += `📁 *Service Type:* ${currentActiveService.toUpperCase()}%0A`;
+        if (fromVal !== "N/A") message += `📍 *From:* ${fromVal}%0A`;
+        message += `🎯 *To / Place:* ${toVal}%0A`;
+        message += `📅 *Date:* ${dateVal}%0A`;
+        message += `👥 *Configuration:* ${detailsVal}%0A`;
+        message += `==============================%0A`;
+        message += `Please confirm availability and share final quotes.`;
+
+        const waUrl = `https://wa.me/9779705446407?text=${message}`;
+        window.open(waUrl, '_blank');
+    });
+
+    // STRIC AUTOCOMPLETE TYPE-AND-SELECT BINDING LOGIC ENGINE
+    function bindAutocompleteToField(fieldId, listId) {
+        const input = document.getElementById(fieldId);
+        const listContainer = document.getElementById(listId);
+        if (!input || !listContainer) return;
+
+        let debounceTimer;
+
+        input.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            const query = input.value.trim();
+
+            if (query.length < 3) {
+                listContainer.style.display = 'none';
+                return;
+            }
+
+            debounceTimer = setTimeout(async () => {
+                try {
+                    // Query localized context via Nominatim API bounded to Nepal & India map coordinates
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=np,in&limit=4`;
+                    const res = await fetch(url);
+                    const results = await res.json();
+
+                    if (results && results.length > 0) {
+                        listContainer.innerHTML = results.map(item => {
+                            const cleanPlace = item.display_name.split(',').slice(0, 3).join(',');
+                            return `<div class="autocomplete-item" data-value="${escapeHTML(cleanPlace)}">${escapeHTML(cleanPlace)}</div>`;
+                        }).join('');
+                        listContainer.style.display = 'block';
+                    } else {
+                        listContainer.style.display = 'none';
+                    }
+                } catch(err) {
+                    console.error("Dashboard geocode drop:", err);
+                }
+            }, 300);
+        });
+
+        // Click execution logic forces element string selection securely
+        listContainer.addEventListener('click', (e) => {
+            const item = e.target.closest('.autocomplete-item');
+            if (!item) return;
+
+            input.value = item.dataset.value;
+            listContainer.style.display = 'none';
+        });
+
+        // Hide search options dropdown list upon clicking off container focus
+        document.addEventListener('click', (e) => {
+            if (e.target !== input) listContainer.style.display = 'none';
+        });
+    }
+
+    // Default Initialization Render call
+    renderActiveForm('flight');
 }

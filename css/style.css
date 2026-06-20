@@ -1319,3 +1319,147 @@ a:hover {
     background-color: var(--bg-gray);
     color: var(--secondary-color);
 }
+
+/* ==========================================================================
+   16. TRAVEL & BOOKING SERVICES DASHBOARD UI
+   ========================================================================== */
+.services-section {
+    background-color: var(--bg-gray);
+    padding: 2.5rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.services-tabs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    max-width: 1400px;
+    margin: 1.5rem auto 0 auto;
+}
+
+@media (min-width: 768px) {
+    .services-tabs-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+.service-tab-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.service-tab-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--secondary-color);
+}
+
+.service-tab-card.active-tab {
+    border-color: var(--primary-color);
+    background-color: rgba(255, 153, 0, 0.04);
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.service-icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--bg-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: var(--transition);
+}
+
+.service-tab-card.active-tab .service-icon-circle {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Master Booking Panel Layout */
+.booking-dashboard-panel {
+    max-width: 1400px;
+    margin: 2rem auto;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    box-shadow: var(--shadow-medium);
+}
+
+.booking-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 1rem;
+}
+
+@media (min-width: 992px) {
+    .booking-form-grid {
+        grid-template-columns: repeat(4, 1fr);
+        align-items: end;
+    }
+}
+
+.input-field-block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-field-block label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+}
+
+.input-field-block input, 
+.input-field-block select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    outline: none;
+    background-color: var(--bg-gray);
+    transition: var(--transition);
+}
+
+.input-field-block input:focus {
+    border-color: var(--secondary-color);
+    background-color: #ffffff;
+}
+
+.book-submit-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+}
+
+.book-submit-btn:hover {
+    background-color: #ff8c3b;
+}
