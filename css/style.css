@@ -1463,3 +1463,41 @@ a:hover {
 .book-submit-btn:hover {
     background-color: #ff8c3b;
 }
+
+/* ==========================================================================
+   HIGH-PERFORMANCE ENDLESS SCROLLING TEXT TICKER BAR
+   ========================================================================== */
+.jmd-ticker-bar {
+    background-color: #FF9900; /* Vibrant Orange Background matching your theme */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0.5rem 0;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.jmd-ticker-track {
+    display: inline-block;
+    white-space: nowrap;
+    animation: endlessTickerMovement 30s linear infinite; /* Controls the scroll speed */
+}
+
+.jmd-ticker-track span {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #FFFFFF; /* Crisp white text */
+    letter-spacing: 1px;
+    padding: 0 2.5rem; /* Spacious padding separator between metrics statements */
+    display: inline-block;
+}
+
+/* Cinematic Hardware-Accelerated Smooth Movement keyframes */
+@keyframes endlessTickerMovement {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        transform: translate3d(-50%, 0, 0); /* Slides cleanly halfway through the duplicated string track */
+    }
+}
