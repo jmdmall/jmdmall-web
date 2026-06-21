@@ -29,49 +29,185 @@
         </div>
     </div>
 
-    <div class="top-contact-bar">
-        <div class="top-contact-container">
-            <a class="top-contact-link" id="topPhone" href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank">📱 +977 9705446407</a>
-            <a class="top-contact-link" id="topEmail" href="mailto:info@jmdmall.com">✉️ info@jmdmall.com</a>
+   <div class="jmd-top-utility-bar">
+        <div class="jmd-header-container utility-flex">
+            <div class="utility-left">
+                <span class="utility-badge">💱 INR/NPR Accepted</span>
+                <span class="utility-text">⚡ Direct Sourcing Agent Platform • Zero Commissions</span>
+            </div>
+            <div class="utility-right">
+                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="utility-link">
+                    <i class="fa-brands fa-whatsapp green-glow"></i> +977 9705446407
+                </a>
+                <span class="utility-divider">|</span>
+                <a href="mailto:info@jmdmall.com" class="utility-link">
+                    <i class="fa-regular fa-envelope"></i> info@jmdmall.com
+                </a>
+            </div>
         </div>
     </div>
 
-   <nav class="navbar">
-        <div class="nav-container">
-
-            <div class="nav-brand-wrapper">
-                <a href="index.html" style="display: block; border: none; text-decoration: none;">
-                    <img src="images/logo.png" alt="JMD Mall Logo" class="nav-logo-img" onerror="this.style.display='none'">
+    <header class="jmd-main-navigation">
+        <div class="jmd-header-container nav-grid-layout">
+            
+            <div class="jmd-brand-block">
+                <a href="index.html" class="brand-anchor">
+                    <img src="images/logo.png" alt="JMD Mall Logo" class="brand-logo-graphic" onerror="this.style.display='none'; this.nextElementSibling.style.fontSize='1.5rem'">
+                    <div class="brand-text-group">
+                        <span class="brand-title-text">JMD<span class="accent-color">MALL</span></span>
+                        <span class="brand-domain-subtext">jmdmall.com</span>
+                    </div>
                 </a>
-                <span class="nav-logo-subtext">jmdmall.com</span>
             </div>
 
-            <div class="nav-center-contacts">
-                <a href="tel:+9779705446407" class="header-contact-link">📞 Call</a>
-                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="header-contact-link" style="color: #25D366;">💬 WhatsApp</a>
-                <a href="mailto:info@jmdmall.com" class="header-contact-link">✉️ info@jmdmall.com</a>
+            <div class="jmd-search-core-wrapper">
+                <div class="search-pill-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon-left"></i>
+                    <input type="text" id="searchInput" placeholder="Search premium marketplace goods..." class="search-pill-input">
+                    <button class="search-pill-submit-btn" id="searchBtn">Find</button>
+                </div>
             </div>
 
-            <div class="nav-right-actions">
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Search quality products..." class="search-input">
-                    <button class="search-btn" id="searchBtn">🔍</button>
-                </div>
-                
-                <div class="header-menu-links">
-                    <a href="index.html" class="header-menu-link active">Home</a>
-                    <a href="about.html" class="header-menu-link">About</a>
-                    <a href="contact.html" class="header-menu-link">Contact</a>
-                </div>
+            <div class="jmd-desktop-menu-actions">
+                <nav class="desktop-nav-links">
+                    <a href="index.html" class="nav-menu-item active">Home</a>
+                    <a href="about.html" class="nav-menu-item">About</a>
+                    <a href="contact.html" class="nav-menu-item">Contact</a>
+                </nav>
+                <div class="desktop-action-divider"></div>
+                <a href="tel:+9779705446407" class="nav-instant-call-btn">
+                    <i class="fa-solid fa-phone-volume"></i> Call Now
+                </a>
+            </div>
+
+            <div class="jmd-mobile-interface-triggers">
+                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="mobile-quick-wa-icon" aria-label="WhatsApp Us">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+                <button class="mobile-navigation-hamburger-toggle" id="menuToggleBtn" aria-label="Toggle Mobile Menu">
+                    <span class="hamburger-bar-line"></span>
+                    <span class="hamburger-bar-line"></span>
+                    <span class="hamburger-bar-line"></span>
+                </button>
             </div>
 
         </div>
-    </nav>
+    </header>
 
-    <div class="location-bar">
-        <div class="location-container">
-            <span class="location-text" id="locationDisplay">📍 Detecting your delivery area...</span>
-            <button class="location-edit-btn" id="editLocationBtn">Change</button>
+    <div class="jmd-mobile-drawer-overlay" id="mobileDrawer">
+        <div class="drawer-content-card">
+            <div class="drawer-header-row">
+                <span class="drawer-logo-title">JMD<span class="accent-color">MALL</span></span>
+                <button class="drawer-dismiss-close-btn" id="drawerCloseBtn">&times;</button>
+            </div>
+            
+            <div class="drawer-body-links">
+                <a href="index.html" class="drawer-nav-item active"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="about.html" class="drawer-nav-item"><i class="fa-solid fa-circle-info"></i> About Us</a>
+                <a href="contact.html" class="drawer-nav-item"><i class="fa-solid fa-address-book"></i> Contact Us</a>
+                
+                <hr class="drawer-menu-hr-divider">
+                
+                <span class="drawer-section-label">Quick Contacts</span>
+                <a href="tel:+9779705446407" class="drawer-contact-action"><i class="fa-solid fa-phone"></i> Direct Call Channel</a>
+                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="drawer-contact-action" style="color: #25D366;"><i class="fa-brands fa-whatsapp"></i> WhatsApp Live Chat</a>
+                <a href="mailto:info@jmdmall.com" class="drawer-contact-action"><i class="fa-regular fa-envelope"></i> Email Support Desk</a>
+            </div>
+        </div>
+    </div>
+
+   <div class="jmd-top-utility-bar">
+        <div class="jmd-header-container utility-flex">
+            <div class="utility-left">
+                <span class="utility-badge">💱 INR/NPR Accepted</span>
+                <span class="utility-text">Direct Sourcing Agent Platform • Zero Commissions</span>
+            </div>
+            <div class="utility-right">
+                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="utility-link">
+                    <i class="fa-brands fa-whatsapp green-glow"></i> +977 9705446407
+                </a>
+                <span class="utility-divider">|</span>
+                <a href="mailto:info@jmdmall.com" class="utility-link">
+                    <i class="fa-regular fa-envelope"></i> info@jmdmall.com
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <header class="jmd-main-navigation">
+        <div class="jmd-header-container nav-grid-layout">
+            
+            <div class="jmd-brand-block">
+                <a href="index.html" class="brand-anchor">
+                    <img src="images/logo.png" alt="JMD Mall Logo" class="brand-logo-graphic" onerror="this.style.display='none'; this.nextElementSibling.style.fontSize='1.5rem'">
+                    <div class="brand-text-group">
+                        <span class="brand-title-text">JMD<span class="accent-color">MALL</span></span>
+                        <span class="brand-domain-subtext">jmdmall.com</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="jmd-search-core-wrapper">
+                <div class="search-pill-container">
+                    
+                    <div class="search-location-inline-block">
+                        <span class="loc-dot-icon"><i class="fa-solid fa-location-dot"></i></span>
+                        <span id="locationDisplay">Detecting area...</span>
+                        <button id="editLocationBtn">Change</button>
+                    </div>
+
+                    <i class="fa-solid fa-magnifying-glass search-icon-left"></i>
+                    <input type="text" id="searchInput" placeholder="Search premium marketplace goods..." class="search-pill-input">
+                    <button class="search-pill-submit-btn" id="searchBtn">Find</button>
+                    
+                </div>
+            </div>
+
+            <div class="jmd-desktop-menu-actions">
+                <nav class="desktop-nav-links">
+                    <a href="index.html" class="nav-menu-item active">Home</a>
+                    <a href="about.html" class="nav-menu-item">About</a>
+                    <a href="contact.html" class="nav-menu-item">Contact</a>
+                </nav>
+                <div class="desktop-action-divider"></div>
+                <a href="tel:+9779705446407" class="nav-instant-call-btn">
+                    <i class="fa-solid fa-phone-volume"></i> Call Now
+                </a>
+            </div>
+
+            <div class="jmd-mobile-interface-triggers">
+                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="mobile-quick-wa-icon" aria-label="WhatsApp Us">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+                <button class="mobile-navigation-hamburger-toggle" id="menuToggleBtn" aria-label="Toggle Mobile Menu">
+                    <span class="hamburger-bar-line"></span>
+                    <span class="hamburger-bar-line"></span>
+                    <span class="hamburger-bar-line"></span>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <div class="jmd-mobile-drawer-overlay" id="mobileDrawer">
+        <div class="drawer-content-card">
+            <div class="drawer-header-row">
+                <span class="drawer-logo-title">JMD<span class="accent-color">MALL</span></span>
+                <button class="drawer-dismiss-close-btn" id="drawerCloseBtn">&times;</button>
+            </div>
+            
+            <div class="drawer-body-links">
+                <a href="index.html" class="drawer-nav-item active"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="about.html" class="drawer-nav-item"><i class="fa-solid fa-circle-info"></i> About Us</a>
+                <a href="contact.html" class="drawer-nav-item"><i class="fa-solid fa-address-book"></i> Contact Us</a>
+                
+                <hr class="drawer-menu-hr-divider">
+                
+                <span class="drawer-section-label">Quick Contacts</span>
+                <a href="tel:+9779705446407" class="drawer-contact-action"><i class="fa-solid fa-phone"></i> Direct Call Channel</a>
+                <a href="https://wa.me/9779705446407?text=Hello%20JMD%20Mall" target="_blank" class="drawer-contact-action" style="color: #25D366;"><i class="fa-brands fa-whatsapp"></i> WhatsApp Live Chat</a>
+                <a href="mailto:info@jmdmall.com" class="drawer-contact-action"><i class="fa-regular fa-envelope"></i> Email Support Desk</a>
+            </div>
         </div>
     </div>
 
@@ -122,6 +258,110 @@
 
         <div class="slide-dots" id="slideDots"></div>
 
+    </section>
+
+    <section class="categories-section">
+        <div class="filter-container">
+            <h2>Categories</h2>
+            <p class="products-subtitle">Shop by category</p>
+            <div class="categories-grid" id="categoriesGrid">
+                </div>
+        </div>
+    </section>
+
+    <section class="filter-section">
+        <div class="filter-container">
+            <h2>Featured Products</h2>
+            <div class="category-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="featured">Featured</button>
+                <button class="filter-btn" data-filter="Electronics">Electronics</button>
+                <button class="filter-btn" data-filter="Accessories">Accessories</button>
+            </div>
+        </div>
+    </section>
+
+    <main class="products-container">
+        <div class="products-grid" id="productsGrid">
+            <div class="loading">
+                Loading products...
+            </div>
+        </div>
+        <div class="view-all-wrapper" id="viewAllWrapper" style="display:none;text-align:center;margin-top:12px;">
+            <a id="viewAllLink" class="action-btn" href="all-products.html">View all</a>
+        </div>
+    </main>
+
+   <div class="location-modal" id="locationModal">
+        <div class="location-modal-content">
+            <h3>Enter Delivery Location</h3>
+            <p>Search your city or neighborhood in Nepal:</p>
+            
+            <button class="modal-btn save" id="modalDetectBtn" style="width:100%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                📍 Detect My Location
+            </button>
+
+            <div style="border-top: 1px solid var(--border-color); margin-bottom: 1rem; padding-top: 1rem; text-align: center; font-size: 0.85rem; color: var(--text-light);">OR SEARCH MANUALLY</div>
+
+            <div class="autocomplete-wrapper" style="position: relative; margin-bottom: 1.5rem;">
+                <input type="text" id="manualLocationInput" placeholder="Type your town or city..." autocomplete="off" style="margin-bottom: 0;">
+                <div id="autocompleteResults" class="autocomplete-results" style="position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid var(--border-color); border-top: none; max-height: 200px; overflow-y: auto; z-index: 3000; display: none; box-shadow: var(--shadow-medium); border-radius: 0 0 4px 4px;"></div>
+            </div>
+
+            <div id="locationErrorMsg" style="color: #e63946; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem; text-align: center; display: none;"></div>
+
+            <div class="location-modal-actions">
+                <button class="modal-btn cancel" id="closeLocationModal">Cancel</button>
+                <button class="modal-btn save" id="saveLocationBtn" disabled style="opacity: 0.5; cursor: not-allowed;">Save Location</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="announcement-modal" id="noticeModal">
+        <div class="notice-content">
+            <button class="notice-close-btn" id="closeNoticeBtn" aria-label="Close Notice">&times;</button>
+            <a href="all-products.html" id="noticeLink">
+                <img src="images/amazonbanner.png" alt="Special Sale Notice" class="notice-image">
+            </a>
+        </div>
+    </div>
+
+    <div id="productModal"></div>
+
+        <section class="services-section">
+        <div class="container">
+            <h2 class="text-center">Travel & Booking Services</h2>
+            <p class="products-subtitle text-center">Get the lowest guaranteed pricing across Nepal & India</p>
+            
+            <div class="services-tabs-grid" id="servicesTabsGrid">
+                <div class="service-tab-card active-tab" data-service="flight">
+                    <div class="service-icon-circle">✈️</div>
+                    <h3 style="font-size: 1rem; font-weight: 700;">Flight Ticket</h3>
+                </div>
+                <div class="service-tab-card" data-service="railway">
+                    <div class="service-icon-circle">🚂</div>
+                    <h3 style="font-size: 1rem; font-weight: 700;">Railway Ticket</h3>
+                </div>
+                <div class="service-tab-card" data-service="hotel">
+                    <div class="service-icon-circle">🏨</div>
+                    <h3 style="font-size: 1rem; font-weight: 700;">Hotel Booking</h3>
+                </div>
+                <div class="service-tab-card" data-service="car">
+                    <div class="service-icon-circle">🚗</div>
+                    <h3 style="font-size: 1rem; font-weight: 700;">Book a Car</h3>
+                </div>
+            </div>
+
+            <div class="booking-dashboard-panel" id="bookingDashboardPanel">
+                <h3 id="bookingPanelTitle" style="color: var(--secondary-color); font-weight: 700; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">✈️ Book Domestic & International Flights</h3>
+                
+                <form id="travelBookingForm" onsubmit="event.preventDefault();">
+                    <div class="booking-form-grid" id="dynamicFieldsContainer">
+                        </div>
+                </form>
+            </div>
+
+        </div>
     </section>
 
  <section class="youtube-channel-section py-5" style="background-color: var(--bg-gray); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
@@ -303,110 +543,6 @@
 
         </div>
     </section>
-
-    <section class="services-section">
-        <div class="container">
-            <h2 class="text-center">Travel & Booking Services</h2>
-            <p class="products-subtitle text-center">Get the lowest guaranteed pricing across Nepal & India</p>
-            
-            <div class="services-tabs-grid" id="servicesTabsGrid">
-                <div class="service-tab-card active-tab" data-service="flight">
-                    <div class="service-icon-circle">✈️</div>
-                    <h3 style="font-size: 1rem; font-weight: 700;">Flight Ticket</h3>
-                </div>
-                <div class="service-tab-card" data-service="railway">
-                    <div class="service-icon-circle">🚂</div>
-                    <h3 style="font-size: 1rem; font-weight: 700;">Railway Ticket</h3>
-                </div>
-                <div class="service-tab-card" data-service="hotel">
-                    <div class="service-icon-circle">🏨</div>
-                    <h3 style="font-size: 1rem; font-weight: 700;">Hotel Booking</h3>
-                </div>
-                <div class="service-tab-card" data-service="car">
-                    <div class="service-icon-circle">🚗</div>
-                    <h3 style="font-size: 1rem; font-weight: 700;">Book a Car</h3>
-                </div>
-            </div>
-
-            <div class="booking-dashboard-panel" id="bookingDashboardPanel">
-                <h3 id="bookingPanelTitle" style="color: var(--secondary-color); font-weight: 700; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">✈️ Book Domestic & International Flights</h3>
-                
-                <form id="travelBookingForm" onsubmit="event.preventDefault();">
-                    <div class="booking-form-grid" id="dynamicFieldsContainer">
-                        </div>
-                </form>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="categories-section">
-        <div class="filter-container">
-            <h2>Categories</h2>
-            <p class="products-subtitle">Shop by category</p>
-            <div class="categories-grid" id="categoriesGrid">
-                </div>
-        </div>
-    </section>
-
-    <section class="filter-section">
-        <div class="filter-container">
-            <h2>Featured Products</h2>
-            <div class="category-filters">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="featured">Featured</button>
-                <button class="filter-btn" data-filter="Electronics">Electronics</button>
-                <button class="filter-btn" data-filter="Accessories">Accessories</button>
-            </div>
-        </div>
-    </section>
-
-    <main class="products-container">
-        <div class="products-grid" id="productsGrid">
-            <div class="loading">
-                Loading products...
-            </div>
-        </div>
-        <div class="view-all-wrapper" id="viewAllWrapper" style="display:none;text-align:center;margin-top:12px;">
-            <a id="viewAllLink" class="action-btn" href="all-products.html">View all</a>
-        </div>
-    </main>
-
-   <div class="location-modal" id="locationModal">
-        <div class="location-modal-content">
-            <h3>Enter Delivery Location</h3>
-            <p>Search your city or neighborhood in Nepal:</p>
-            
-            <button class="modal-btn save" id="modalDetectBtn" style="width:100%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                📍 Detect My Location
-            </button>
-
-            <div style="border-top: 1px solid var(--border-color); margin-bottom: 1rem; padding-top: 1rem; text-align: center; font-size: 0.85rem; color: var(--text-light);">OR SEARCH MANUALLY</div>
-
-            <div class="autocomplete-wrapper" style="position: relative; margin-bottom: 1.5rem;">
-                <input type="text" id="manualLocationInput" placeholder="Type your town or city..." autocomplete="off" style="margin-bottom: 0;">
-                <div id="autocompleteResults" class="autocomplete-results" style="position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid var(--border-color); border-top: none; max-height: 200px; overflow-y: auto; z-index: 3000; display: none; box-shadow: var(--shadow-medium); border-radius: 0 0 4px 4px;"></div>
-            </div>
-
-            <div id="locationErrorMsg" style="color: #e63946; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem; text-align: center; display: none;"></div>
-
-            <div class="location-modal-actions">
-                <button class="modal-btn cancel" id="closeLocationModal">Cancel</button>
-                <button class="modal-btn save" id="saveLocationBtn" disabled style="opacity: 0.5; cursor: not-allowed;">Save Location</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="announcement-modal" id="noticeModal">
-        <div class="notice-content">
-            <button class="notice-close-btn" id="closeNoticeBtn" aria-label="Close Notice">&times;</button>
-            <a href="all-products.html" id="noticeLink">
-                <img src="images/amazonbanner.png" alt="Special Sale Notice" class="notice-image">
-            </a>
-        </div>
-    </div>
-
-    <div id="productModal"></div>
 
     <footer class="footer">
         <div class="footer-container">

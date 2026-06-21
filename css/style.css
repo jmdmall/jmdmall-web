@@ -1664,3 +1664,467 @@ a:hover {
     background: rgba(255, 255, 255, 0.1) !important;
     border-color: #ffffff;
 }
+
+/* ==========================================================================
+   MODERN SYSTEM NAVIGATION VARIABLES & STRUCTURAL RESET
+   ========================================================================== */
+:root {
+    --nav-bg: #ffffff;
+    --utility-bg: #1a202c;
+    --nav-text: #2d3748;
+    --nav-accent: #e53e3e;
+    --nav-border: rgba(0, 0, 0, 0.06);
+    --search-bg: #f7fafc;
+    --shadow-premium: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+.jmd-header-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* ==========================================================================
+   TOP UTILITY CONVERSION SECTION LAYOUT
+   ========================================================================== */
+.jmd-top-utility-bar {
+    background-color: var(--utility-bg);
+    color: #ffffff;
+    padding: 0.5rem 0;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+.utility-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.utility-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.utility-badge {
+    background: var(--nav-accent);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.utility-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.utility-link {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.utility-link:hover {
+    color: #ffffff;
+}
+.green-glow {
+    color: #25D366;
+}
+.utility-divider {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   MAIN NAVIGATION HUB GRID LAYOUT WITH INTEGRATED LOCATION
+   ========================================================================== */
+.jmd-main-navigation {
+    background-color: var(--nav-bg);
+    border-bottom: 1px solid var(--nav-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0.85rem 0;
+    box-shadow: var(--shadow-premium);
+}
+.nav-grid-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+/* Brand Graphic Metrics */
+.jmd-brand-block {
+    flex-shrink: 0;
+}
+.brand-anchor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+.brand-logo-graphic {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+}
+.brand-text-group {
+    display: flex;
+    flex-direction: column;
+}
+.brand-title-text {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--utility-bg);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+}
+.brand-title-text .accent-color {
+    color: var(--nav-accent);
+}
+.brand-domain-subtext {
+    font-size: 0.72rem;
+    color: #a0aec0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Center Search Container Architecture */
+.jmd-search-core-wrapper {
+    flex-grow: 1;
+    max-width: 600px;
+}
+.search-pill-container {
+    background-color: var(--search-bg);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 50px;
+    padding: 4px 6px 4px 16px;
+    display: flex;
+    align-items: center;
+    transition: all 0.25s ease;
+}
+.search-pill-container:focus-within {
+    background-color: #ffffff;
+    border-color: var(--nav-accent);
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15);
+}
+
+/* Inline Location Sub-Block styles */
+.search-location-inline-block {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-right: 12px;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    max-width: 180px;
+    flex-shrink: 0;
+}
+.loc-dot-icon {
+    color: var(--nav-accent);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+}
+#locationDisplay {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--nav-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 110px;
+}
+#editLocationBtn {
+    background: transparent;
+    border: none;
+    color: #a0aec0;
+    font-size: 0.7rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+#editLocationBtn:hover {
+    color: var(--nav-accent);
+}
+
+.search-icon-left {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-left: 12px;
+    margin-right: 10px;
+}
+.search-pill-input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--nav-text);
+    outline: none;
+}
+.search-pill-input::placeholder {
+    color: #a0aec0;
+}
+.search-pill-submit-btn {
+    background-color: var(--utility-bg);
+    color: white;
+    border: none;
+    padding: 7px 18px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.search-pill-submit-btn:hover {
+    background-color: var(--nav-accent);
+}
+
+/* Desktop Menus */
+.jmd-desktop-menu-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-shrink: 0;
+}
+.desktop-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+.nav-menu-item {
+    color: var(--nav-text);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    padding: 6px 4px;
+    position: relative;
+    transition: color 0.2s ease;
+}
+.nav-menu-item:hover, .nav-menu-item.active {
+    color: var(--nav-accent);
+}
+.nav-menu-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background-color: var(--nav-accent);
+    border-radius: 20px;
+}
+.desktop-action-divider {
+    width: 1px;
+    height: 24px;
+    background-color: var(--nav-border);
+}
+.nav-instant-call-btn {
+    background-color: rgba(229, 62, 62, 0.08);
+    color: var(--nav-accent);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+.nav-instant-call-btn:hover {
+    background-color: var(--nav-accent);
+    color: white;
+}
+
+/* Mobile Trigger Framework UI */
+.jmd-mobile-interface-triggers {
+    display: none;
+    align-items: center;
+    gap: 12px;
+}
+.mobile-quick-wa-icon {
+    width: 38px;
+    height: 38px;
+    background-color: #25D366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+}
+.mobile-navigation-hamburger-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 6px;
+}
+.hamburger-bar-line {
+    width: 22px;
+    height: 2px;
+    background-color: var(--utility-bg);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+/* ==========================================================================
+   MOBILE ACTION CONTENT DRAWER MODAL OVERLAY STYLE RULES
+   ========================================================================== */
+.jmd-mobile-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.jmd-mobile-drawer-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.drawer-content-card {
+    position: absolute;
+    top: 0;
+    right: -280px;
+    width: 280px;
+    height: 100%;
+    background-color: #ffffff;
+    box-shadow: -4px 0 30px rgba(0,0,0,0.15);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.jmd-mobile-drawer-overlay.active .drawer-content-card {
+    right: 0;
+}
+.drawer-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+.drawer-logo-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--utility-bg);
+}
+.drawer-logo-title .accent-color {
+    color: var(--nav-accent);
+}
+.drawer-dismiss-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #a0aec0;
+}
+.drawer-body-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.drawer-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--nav-text);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+.drawer-nav-item:hover, .drawer-nav-item.active {
+    background-color: rgba(229, 62, 62, 0.05);
+    color: var(--nav-accent);
+}
+.drawer-menu-hr-divider {
+    border: none;
+    border-top: 1px solid var(--nav-border);
+    margin: 1rem 0;
+}
+.drawer-section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #a0aec0;
+    letter-spacing: 0.5px;
+    padding-left: 14px;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+.drawer-contact-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 8px 14px;
+}
+
+/* ==========================================================================
+   FLUID GRAPHIC MEDIA ADAPTATION LAYER RULES
+   ========================================================================== */
+@media (max-width: 992px) {
+    .utility-text, .utility-divider, .jmd-desktop-menu-actions {
+        display: none !important;
+    }
+    .jmd-mobile-interface-triggers {
+        display: flex;
+    }
+    .jmd-search-core-wrapper {
+        max-width: none;
+        order: 3;
+        width: 100%;
+    }
+    .nav-grid-layout {
+        flex-wrap: wrap;
+        gap: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .utility-left {
+        display: none !important;
+    }
+    .utility-flex {
+        justify-content: center;
+    }
+    .brand-logo-graphic {
+        height: 36px;
+    }
+    .brand-title-text {
+        font-size: 1.15rem;
+    }
+    .search-location-inline-block {
+        max-width: 125px !important;
+        padding-right: 6px !important;
+    }
+    #locationDisplay {
+        max-width: 65px !important;
+        font-size: 0.72rem !important;
+    }
+    .search-icon-left {
+        margin-left: 6px !important;
+    }
+}

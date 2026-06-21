@@ -941,3 +941,36 @@ function openTwitterApp() {
         window.open(FALLBACK_WEB_URL, '_blank');
     }
 }
+
+// ==========================================================================
+// ELITE NAV HUB INTERACTIVE DRAWER CONTROLLER SCRIPT LOCK
+// ==========================================================================
+document.addEventListener("DOMContentLoaded", function() {
+    const menuToggleBtn = document.getElementById("menuToggleBtn");
+    const drawerCloseBtn = document.getElementById("drawerCloseBtn");
+    const mobileDrawer   = document.getElementById("mobileDrawer");
+
+    if (menuToggleBtn && mobileDrawer) {
+        // Toggle slide-out modal state open
+        menuToggleBtn.addEventListener("click", function() {
+            mobileDrawer.classList.add("active");
+            document.body.style.overflow = "hidden"; // Prevents background body scrolling
+        });
+    }
+
+    if (drawerCloseBtn && mobileDrawer) {
+        // Dismiss slide drawer closed
+        drawerCloseBtn.addEventListener("click", function() {
+            mobileDrawer.classList.remove("active");
+            document.body.style.overflow = ""; // Restores page scrolling smoothly
+        });
+
+        // Close drawer if clicking outside the side panel container bounds
+        mobileDrawer.addEventListener("click", function(event) {
+            if (event.target === mobileDrawer) {
+                mobileDrawer.classList.remove("active");
+                document.body.style.overflow = "";
+            }
+        });
+    }
+});
