@@ -1516,17 +1516,26 @@ a:hover {
    ========================================================================== */
 .fb-cards-marketplace-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    max-width: 1200px;
+    /* 2 Columns on small mobile viewports by default */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    max-width: 1600px; /* Wider container bounds to support 6 cards horizontally */
     margin: 0 auto;
 }
 
+/* Medium Devices (Tablets, 768px and up) */
 @media (min-width: 768px) {
-    .fb-cards-marketplace-grid { grid-template-columns: repeat(2, 1fr); }
+    .fb-cards-marketplace-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 Columns on medium devices */
+        gap: 1.25rem;
+    }
 }
-@media (min-width: 992px) {
-    .fb-cards-marketplace-grid { grid-template-columns: repeat(3, 1fr); }
+
+/* Large Devices / Laptops (1200px and up) */
+@media (min-width: 1200px) {
+    .fb-cards-marketplace-grid {
+        grid-template-columns: repeat(6, 1fr); /* 6 Columns on laptops */
+    }
 }
 
 .market-social-post-card {
