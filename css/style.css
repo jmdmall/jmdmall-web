@@ -1622,3 +1622,30 @@ a:hover {
     background-color: #166FE5;
     transform: scale(1.03);
 }
+
+/* ==========================================================================
+   19. TWITTER DECK LUXURY CARDS PRESENTATION
+   ========================================================================== */
+.market-twitter-post-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-light);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.market-twitter-post-card:hover {
+    transform: translateY(-5px);
+    border-color: #000000; /* Dark contrast boundary shift */
+    box-shadow: var(--shadow-medium);
+}
+
+.twitter-footer-badge:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #ffffff;
+}

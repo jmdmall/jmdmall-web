@@ -915,3 +915,29 @@ function openFacebookApp() {
         window.open(FALLBACK_WEB_URL, '_blank');
     }
 }
+
+// ==========================================================================
+// MOBILE NATIVE SMART DEEP-LINK OPENER FOR TWITTER (X) APP
+// ==========================================================================
+function openTwitterApp() {
+    const TWITTER_USERNAME = "jmdmall"; // Your exact profile identifier handle
+    const FALLBACK_WEB_URL = `https://x.com/${TWITTER_USERNAME}`;
+
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    // Deep link protocol string
+    const appUrl = `twitter://user?screen_name=${TWITTER_USERNAME}`;
+
+    if (isIOS || isAndroid) {
+        window.location.href = appUrl;
+        
+        // Failover window handler loop
+        setTimeout(() => {
+            window.open(FALLBACK_WEB_URL, '_blank');
+        }, 1200);
+    } else {
+        // Desktop device redirect fallthrough
+        window.open(FALLBACK_WEB_URL, '_blank');
+    }
+}
