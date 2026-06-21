@@ -1511,3 +1511,63 @@ a:hover {
     box-shadow: var(--shadow-medium) !important;
     color: #ffffff !important;
 }
+
+/* ==========================================================================
+   18. FACEBOOK RECENT POSTS MARKETPLACE GRID LAYOUT
+   ========================================================================== */
+.fb-cards-marketplace-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .fb-cards-marketplace-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .fb-cards-marketplace-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.fb-post-wrapper-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.5rem;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.fb-post-wrapper-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-medium);
+}
+
+.fb-grid-action-btn {
+    display: inline-block;
+    background-color: #1877F2; /* Official Facebook Identity Blue */
+    color: #FFFFFF !important;
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    text-decoration: none;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+}
+
+.fb-grid-action-btn:hover {
+    background-color: #166FE5;
+    transform: scale(1.03);
+    box-shadow: var(--shadow-medium);
+}
