@@ -882,3 +882,36 @@ function initTravelServicesEngine() {
     // Default Initialization Render call
     renderActiveForm('flight');
 }
+
+// ==========================================================================
+// MOBILE NATIVE SMART DEEP-LINK OPENER FOR FACEBOOK APP
+// ==========================================================================
+function openFacebookApp() {
+    // Replace this string with your exact Facebook Page numeric ID numerical asset indicator 
+    // If you don't know your ID, you can grab it instantly from findmyfbid.in
+    const FACEBOOK_PAGE_ID = "655146487898613"; 
+    const FALLBACK_WEB_URL = "https://www.facebook.com/jmdmall";
+
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    let appUrl = `fb://page/${FACEBOOK_PAGE_ID}`;
+
+    if (isIOS) {
+        // iOS alternative application routing protocol wrapper profile scheme
+        appUrl = `fb://profile/${FACEBOOK_PAGE_ID}`;
+    }
+
+    if (isIOS || isAndroid) {
+        // Try opening the native app protocol link route line
+        window.location.href = appUrl;
+        
+        // If the app doesn't open within 1.2 seconds, redirect to the browser fallback link safely
+        setTimeout(() => {
+            window.open(FALLBACK_WEB_URL, '_blank');
+        }, 1200);
+    } else {
+        // If they are on a standard desktop computer, open the web browser link directly
+        window.open(FALLBACK_WEB_URL, '_blank');
+    }
+}
