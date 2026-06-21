@@ -1501,3 +1501,13 @@ a:hover {
         transform: translate3d(-50%, 0, 0); /* Slides cleanly halfway through the duplicated string track */
     }
 }
+
+/* ==========================================================================
+   17. YOUTUBE VIDEO COMPONENT INTERACTION transitions
+   ========================================================================== */
+.yt-subscribe-btn:hover {
+    background-color: #cc0000 !important;
+    transform: scale(1.04);
+    box-shadow: var(--shadow-medium) !important;
+    color: #ffffff !important;
+}
