@@ -1503,11 +1503,11 @@ a:hover {
 }
 
 /* ==========================================================================
-   17. YOUTUBE VIDEO COMPONENT INTERACTION transitions
+   17. YOUTUBE VIDEO SECTION ACTIONS HOVER EFFECTS
    ========================================================================== */
 .yt-subscribe-btn:hover {
     background-color: #cc0000 !important;
-    transform: scale(1.04);
+    transform: scale(1.05);
     box-shadow: var(--shadow-medium) !important;
     color: #ffffff !important;
 }
